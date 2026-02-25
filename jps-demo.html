@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JPS Club – Skills & Progress</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+/* ══ EXACT TOKENS FROM PROTOTYPE ══ */
+:root {
+  --primary:#1a1a2e; --secondary:#16213e; --accent:#e94560;
+  --gold:#f5a623;    --surface:#0f3460;   --white:#ffffff;
+  --gray100:#f7f7f8; --gray400:#8e8e93;  --success:#34c759;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#080c18;font-family:'Cormorant Garamond',serif;overflow:hidden;height:100vh;width:100vw;}
+
+/* ── BG ── */
+.bg-layer{
+  position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse at 20% 50%,#0f3460 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 20%,#1a1a2e 0%,transparent 50%),
+             linear-gradient(135deg,#080c18 0%,#0d1117 100%);
+}
+.particle{position:fixed;border-radius:50%;pointer-events:none;opacity:0;z-index:0;
+  animation:floatParticle var(--dur) ease-in-out infinite;}
+@keyframes floatParticle{
+  0%  {transform:translateY(0) scale(1);opacity:0;}
+  20% {opacity:var(--op);}
+  80% {opacity:var(--op);}
+  100%{transform:translateY(-120px) scale(0.5);opacity:0;}
+}
+
+/* ── STAGE ── */
+#stage{position:fixed;inset:0;z-index:10;}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .6s ease;}
+.slide.active{opacity:1;pointer-events:all;}
+
+/* ══ PHONE MOCKUP – exact from prototype ══ */
+.phone-wrapper{
+  opacity:0;transform:translateY(40px) rotateY(-8deg);
+  transition:all .8s .2s cubic-bezier(.16,1,.3,1);perspective:1000px;flex-shrink:0;
+}
+.slide.active .phone-wrapper{opacity:1;transform:translateY(0) rotateY(0deg);}
+.phone{
+  width:280px;height:560px;background:var(--primary);border-radius:40px;
+  border:2px solid rgba(255,255,255,.08);position:relative;overflow:hidden;
+  box-shadow:0 0 0 6px rgba(15,52,96,.4),0 40px 80px rgba(0,0,0,.7),
+             inset 0 0 0 1px rgba(255,255,255,.05),0 0 60px rgba(233,69,96,.15);
+}
+.phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:80px;height:22px;background:#080c18;border-radius:0 0 14px 14px;z-index:10;}
+.phone-screen{position:absolute;inset:8px;border-radius:32px;overflow:hidden;background:#0f1923;}
+.glow-red  {box-shadow:0 0 80px rgba(233,69,96,.2),  0 40px 80px rgba(0,0,0,.7);}
+.glow-gold {box-shadow:0 0 80px rgba(245,166,35,.2), 0 40px 80px rgba(0,0,0,.7);}
+.glow-blue {box-shadow:0 0 80px rgba(15,52,96,.4),   0 40px 80px rgba(0,0,0,.7);}
+.glow-green{box-shadow:0 0 80px rgba(52,199,89,.2),  0 40px 80px rgba(0,0,0,.7);}
+@keyframes phoneFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+@keyframes pulse{0%,100%{box-shadow:0 8px 24px rgba(233,69,96,.4);}50%{box-shadow:0 8px 40px rgba(233,69,96,.7);}}
+
+/* ══ PHONE INNER COMPONENTS ══ */
+.pheader{background:linear-gradient(135deg,var(--primary),var(--surface));padding:28px 16px 16px;color:white;}
+.pheader-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.pheader h3{font-size:10px;opacity:.6;letter-spacing:1px;font-family:'DM Mono',monospace;}
+.pheader h2{font-size:16px;font-weight:700;margin-top:2px;}
+.tier-badge{background:linear-gradient(135deg,var(--gold),#e67e00);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:white;font-family:'DM Mono',monospace;letter-spacing:1px;}
+.points-card{background:rgba(255,255,255,.08);border-radius:16px;padding:12px;text-align:center;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);}
+.points-number{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:2px;background:linear-gradient(135deg,var(--gold),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.points-label{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:2px;margin-top:-4px;font-family:'DM Mono',monospace;}
+.section-title{font-size:11px;font-weight:700;color:#1a1a2e;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;font-family:'DM Mono',monospace;}
+.card{background:white;border-radius:14px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:8px;}
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.qa-btn{background:white;border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.qa-btn .emoji{font-size:20px;margin-bottom:4px;}
+.qa-btn .label{font-size:10px;color:var(--primary);font-weight:600;font-family:'DM Mono',monospace;}
+.reward-card{display:flex;align-items:center;gap:10px;background:white;border-radius:12px;padding:10px;box-shadow:0 2px 6px rgba(0,0,0,.05);margin-bottom:6px;}
+.reward-emoji{font-size:24px;width:40px;height:40px;background:#f0f0f0;border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.reward-info{flex:1;}
+.reward-name{font-size:12px;font-weight:600;color:var(--primary);}
+.reward-pts{font-size:10px;color:var(--accent);font-weight:700;font-family:'DM Mono',monospace;}
+.redeem-btn{background:linear-gradient(135deg,var(--accent),#c73652);color:white;border:none;border-radius:8px;padding:5px 10px;font-size:10px;font-weight:700;font-family:'DM Mono',monospace;cursor:default;}
+.tx-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;}
+.tx-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.tx-desc{flex:1;font-size:11px;color:#444;}
+.tx-pts{font-size:11px;font-weight:700;font-family:'DM Mono',monospace;}
+.qr-screen{background:linear-gradient(160deg,var(--primary) 0%,var(--secondary) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:12px;height:100%;}
+.qr-box{background:white;border-radius:20px;padding:16px;box-shadow:0 0 40px rgba(233,69,96,.3);}
+.wheel-screen{background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;height:100%;gap:10px;}
+.wheel-title{color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;}
+.tab-bar{display:flex;background:white;border-top:1px solid #eee;padding:6px 0 2px;}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;color:#8e8e93;cursor:default;padding:4px 0;font-family:'DM Mono',monospace;}
+.tab-item.active{color:var(--accent);}
+@keyframes spinDemo{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes loadBar{0%{transform:translateX(-100%);}100%{transform:translateX(200%);}}
+
+/* ══ SIDE PANEL – exact from prototype ══ */
+.side-panel{width:340px;padding:0 40px;display:flex;flex-direction:column;justify-content:center;}
+.slide-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;opacity:0;transform:translateY(20px);transition:all .6s .3s ease;}
+.slide-title{font-family:'Bebas Neue',sans-serif;font-size:52px;color:white;line-height:1;letter-spacing:2px;margin-bottom:16px;opacity:0;transform:translateY(20px);transition:all .6s .45s ease;}
+.slide-desc{font-size:16px;color:rgba(255,255,255,.55);line-height:1.7;font-weight:300;opacity:0;transform:translateY(20px);transition:all .6s .6s ease;}
+.feature-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;opacity:0;transform:translateY(20px);transition:all .6s .75s ease;}
+.pill{background:rgba(233,69,96,.12);border:1px solid rgba(233,69,96,.25);color:#ff8fa0;border-radius:20px;padding:5px 14px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.5px;}
+.pill.gold{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:var(--gold);}
+.pill.green{background:rgba(52,199,89,.1);border-color:rgba(52,199,89,.3);color:var(--success);}
+.pill.blue{background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:#a5b4fc;}
+.slide.active .slide-label,.slide.active .slide-title,.slide.active .slide-desc,.slide.active .feature-pills{opacity:1;transform:translateY(0);}
+.api-badge{background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);border-radius:8px;padding:8px 12px;margin-top:20px;font-family:'DM Mono',monospace;font-size:10px;color:#a5b4fc;opacity:0;transition:all .6s .9s ease;}
+.slide.active .api-badge{opacity:1;}
+/* extra note block */
+.note-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;margin-top:18px;opacity:0;transform:translateY(14px);transition:all .6s .92s ease;}
+.note-lbl{font-family:'DM Mono',monospace;font-size:8.5px;color:rgba(233,69,96,.75);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.note-txt{font-size:12px;color:rgba(255,255,255,.42);line-height:1.65;}
+.slide.active .note-card{opacity:1;transform:translateY(0);}
+
+/* ══ SKILLS & ROADMAP SLIDES ══ */
+/* full-width layout for skills/roadmap */
+.wide-slide{padding:64px 56px 52px;gap:40px;}
+
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;flex:1;}
+.sk{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 14px;opacity:0;transform:translateY(14px);}
+.sk.vis{opacity:1;transform:translateY(0);}
+.sk-num{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);font-weight:600;letter-spacing:1px;margin-bottom:3px;}
+.sk-name{font-family:'Bebas Neue',sans-serif;font-size:15px;color:white;letter-spacing:1px;margin-bottom:3px;}
+.sk-desc{font-size:10.5px;color:rgba(255,255,255,.4);line-height:1.5;}
+.sk-tag{display:inline-block;background:rgba(233,69,96,.1);border:1px solid rgba(233,69,96,.2);border-radius:20px;padding:2px 9px;font-size:9px;font-family:'DM Mono',monospace;color:#ff8fa0;margin-top:5px;}
+
+.arch-panel{flex:1;display:flex;flex-direction:column;gap:9px;opacity:0;transform:translateX(24px);transition:all .7s .18s cubic-bezier(.16,1,.3,1);}
+.slide.active .arch-panel{opacity:1;transform:translateX(0);}
+.layer-lbl{font-family:'DM Mono',monospace;font-size:8.5px;color:rgba(255,255,255,.22);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:3px;}
+.arow{display:flex;gap:8px;justify-content:center;}
+.abox{border-radius:9px;padding:9px 12px;text-align:center;min-height:52px;min-width:108px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.abox .ai{font-size:18px;margin-bottom:3px;}
+.abox .an{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:.5px;line-height:1.15;}
+.abox .as{font-size:8.5px;font-weight:400;margin-top:2px;opacity:.65;}
+.abox.c1{background:rgba(233,69,96,.1);border:1px solid rgba(233,69,96,.22);color:#f87171;}
+.abox.c2{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.22);color:#a5b4fc;}
+.abox.c3{background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.22);color:#fbbf24;}
+.abox.c4{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.22);color:#c4b5fd;}
+.abox.c5{background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.22);color:#4ade80;}
+.aarrow{text-align:center;font-size:15px;color:rgba(255,255,255,.15);}
+
+.roadmap{flex:1;display:flex;flex-direction:column;gap:8px;}
+.rm{display:flex;align-items:flex-start;gap:11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 14px;opacity:0;transform:translateX(20px);}
+.rm.vis{opacity:1;transform:translateX(0);}
+.rm-ico{font-size:20px;flex-shrink:0;margin-top:1px;}
+.rm-title{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:.5px;color:white;}
+.rm-desc{font-size:10.5px;color:rgba(255,255,255,.4);margin-top:2px;line-height:1.5;}
+.rm-tag{display:inline-block;border-radius:20px;padding:2px 9px;font-size:9px;font-family:'DM Mono',monospace;margin-top:4px;}
+.rm-done{background:rgba(52,199,89,.12);border:1px solid rgba(52,199,89,.28);color:var(--success);}
+.rm-next{background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.28);color:var(--gold);}
+
+/* ══ INTRO / OUTRO ══ */
+.center-slide{flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0;}
+.outro-logo{width:80px;height:80px;background:linear-gradient(135deg,var(--accent),var(--gold));border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 0 60px rgba(233,69,96,.4);animation:pulse 2s infinite;margin:0 auto 14px;}
+.outro-title{font-family:'Bebas Neue',sans-serif;font-size:68px;color:white;letter-spacing:6px;line-height:1;background:linear-gradient(135deg,white,rgba(255,255,255,.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.outro-sub{font-size:17px;color:rgba(255,255,255,.4);font-weight:300;letter-spacing:2px;margin-top:8px;margin-bottom:18px;}
+.outro-tags{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.outro-tag{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:6px 16px;font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px;}
+
+/* ══ CHROME ══ */
+#top-logo{position:fixed;top:24px;left:28px;display:flex;align-items:center;gap:10px;z-index:100;}
+.logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--gold));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+#top-logo span{font-family:'Bebas Neue',sans-serif;letter-spacing:4px;font-size:16px;color:rgba(255,255,255,.7);}
+#slide-counter{position:fixed;top:28px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.22);letter-spacing:2px;z-index:100;}
+#nav-btns{position:fixed;top:24px;right:24px;display:flex;gap:12px;z-index:100;}
+.nav-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:50px;padding:8px 20px;color:rgba(255,255,255,.5);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all .2s;backdrop-filter:blur(10px);}
+.nav-btn:hover{background:rgba(255,255,255,.12);color:white;}
+#progress-bar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100;}
+.prog-dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.2);transition:all .4s ease;cursor:pointer;}
+.prog-dot.active{width:24px;background:var(--accent);}
+#timer-ring{position:fixed;bottom:16px;right:24px;width:36px;height:36px;z-index:100;opacity:.4;}
+#timer-bar-global{position:fixed;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.05);z-index:200;}
+#timer-fill-global{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));width:0%;}
+</style>
+</head>
+<body>
+
+<div class="bg-layer" id="bg-layer"></div>
+
+<div id="top-logo"><div class="logo-mark">💎</div><span>JPS CLUB</span></div>
+<div id="slide-counter">01 / 09</div>
+<div id="nav-btns">
+  <button class="nav-btn" onclick="prevSlide()">← Prev</button>
+  <button class="nav-btn" onclick="nextSlide()">Next →</button>
+</div>
+<div id="progress-bar"></div>
+<svg id="timer-ring" viewBox="0 0 36 36">
+  <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  <circle id="timer-circle" cx="18" cy="18" r="15" fill="none" stroke="#e94560" stroke-width="2"
+    stroke-dasharray="94.2" stroke-dashoffset="0" stroke-linecap="round"
+    transform="rotate(-90 18 18)" style="transition:stroke-dashoffset .1s linear;"/>
+</svg>
+<div id="timer-bar-global"><div id="timer-fill-global"></div></div>
+
+<div id="stage">
+
+<!-- ════════════════════════════════════════════
+     SLIDE 0 · INTRO (phone app splash + intro text)
+════════════════════════════════════════════ -->
+<div class="slide active" id="slide-0">
+  <div class="phone-wrapper">
+    <div class="phone glow-red" style="animation:phoneFloat 4s ease-in-out infinite;">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div style="background:linear-gradient(160deg,var(--primary) 0%,var(--secondary) 50%,var(--surface) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:100%;">
+          <div style="width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,var(--accent),var(--gold));display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 8px 24px rgba(233,69,96,.4);animation:pulse 2s ease infinite;">💎</div>
+          <h1 style="font-family:'Bebas Neue',sans-serif;letter-spacing:6px;font-size:26px;color:white;">JPS CLUB</h1>
+          <p style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:3px;font-family:'DM Mono',monospace;">JASPAL GROUP LOYALTY</p>
+          <div style="width:60px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:2px;margin-top:8px;"></div>
+          <div style="margin-top:20px;width:50px;height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;">
+            <div style="width:60%;height:100%;background:var(--accent);border-radius:2px;animation:loadBar 1.8s ease infinite;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="side-panel">
+    <div class="slide-label">Jaspal Group · February 2026</div>
+    <div class="slide-title">JPS CLUB LOYALTY APP</div>
+    <div class="slide-desc">A full-featured mobile loyalty platform for Jaspal Group PCL (Thailand) — built on Capillary Tech infrastructure, integrating Sanity CMS and Expo iOS/Android.</div>
+    <div class="feature-pills">
+      <span class="pill">Thai / English</span>
+      <span class="pill">6 Brands</span>
+      <span class="pill gold">Capillary API</span>
+      <span class="pill">Marvel Gamification</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SLIDE 1 · ARCHITECTURE (PPTX Slide 2)
+════════════════════════════════════════════ -->
+<div class="slide wide-slide" id="slide-1">
+  <div class="arch-panel">
+    <div class="layer-lbl">Mobile App Layer</div>
+    <div class="arow">
+      <div class="abox c1"><div class="ai">📱</div><div class="an">Expo App</div><div class="as">React Native · iOS &amp; Android</div></div>
+      <div class="abox c1"><div class="ai">⚡</div><div class="an">NativeWind</div><div class="as">Tailwind for RN</div></div>
+      <div class="abox c1"><div class="ai">🧠</div><div class="an">Zustand</div><div class="as">State management</div></div>
+    </div>
+    <div class="aarrow">↓  REST / HTTPS  ↓</div>
+    <div class="layer-lbl">Backend &amp; Services</div>
+    <div class="arow">
+      <div class="abox c2"><div class="ai">⚙️</div><div class="an">Express API</div><div class="as">Node.js backend</div></div>
+      <div class="abox c3"><div class="ai">🏆</div><div class="an">Capillary</div><div class="as">Points · Rewards · Tiers</div></div>
+      <div class="abox c4"><div class="ai">📝</div><div class="an">Sanity CMS</div><div class="as">Promotions · EN/TH</div></div>
+    </div>
+    <div class="aarrow">↓  EAS Build · GitHub Actions  ↓</div>
+    <div class="layer-lbl">CI / CD &amp; Deployment</div>
+    <div class="arow">
+      <div class="abox c5"><div class="ai">🚀</div><div class="an">EAS Build</div><div class="as">App Store · Play Store</div></div>
+      <div class="abox c5"><div class="ai">🔄</div><div class="an">GitHub Actions</div><div class="as">Monorepo pipelines</div></div>
+      <div class="abox c5"><div class="ai">🛤️</div><div class="an">Railway</div><div class="as">Auto-deploy staging</div></div>
+    </div>
+  </div>
+  <div class="side-panel">
+    <div class="slide-label">Solution Overview</div>
+    <div class="slide-title">ARCHITECTURE &amp; INTEGRATIONS</div>
+    <div class="slide-desc">Three layers working together — Expo React Native on both platforms, an Express backend bridging Capillary and Sanity, and a fully automated EAS + GitHub Actions CI/CD pipeline.</div>
+    <div class="feature-pills">
+      <span class="pill">React Native</span>
+      <span class="pill gold">Capillary Loyalty+</span>
+      <span class="pill blue">Sanity CMS</span>
+      <span class="pill green">EAS CI/CD</span>
+    </div>
+    <div class="note-card">
+      <div class="note-lbl">7 Skill Modules · 3 Platforms · 1 Loyalty Engine</div>
+      <div class="note-txt">Monorepo structure — one codebase, one deploy pipeline, three targets. Every layer is guided by a dedicated AI skill module.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SLIDE 2 · HOME DASHBOARD (prototype screen 1)
+════════════════════════════════════════════ -->
+<div class="slide" id="slide-2">
+  <div class="phone-wrapper">
+    <div class="phone glow-red" style="animation:phoneFloat 4s ease-in-out .5s infinite;">
+      <div class="phone-notch"></div>
+      <div class="phone-screen" style="display:flex;flex-direction:column;">
+        <div class="pheader">
+          <div class="pheader-top">
+            <div><h3>WELCOME BACK</h3><h2>Saran Patel</h2></div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <div class="tier-badge">JPS Plus ★</div>
+              <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:12px;">🔔</div>
+            </div>
+          </div>
+          <div class="points-card">
+            <div class="points-number">2,450</div>
+            <div class="points-label">POINTS AVAILABLE</div>
+            <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);">
+              <div style="text-align:center;"><div style="font-size:13px;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">350</div><div style="font-size:9px;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace;">PENDING</div></div>
+              <div style="width:1px;background:rgba(255,255,255,.1);"></div>
+              <div style="text-align:center;"><div style="font-size:13px;font-weight:700;color:var(--success);font-family:'DM Mono',monospace;">8,200</div><div style="font-size:9px;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace;">LIFETIME</div></div>
+              <div style="width:1px;background:rgba(255,255,255,.1);"></div>
+              <div style="text-align:center;"><div style="font-size:13px;font-weight:700;color:white;font-family:'DM Mono',monospace;">24</div><div style="font-size:9px;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace;">PURCHASES</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1;padding:10px;background:#f7f7f8;overflow:hidden;">
+          <div class="section-title">Quick Actions</div>
+          <div class="quick-actions">
+            <div class="qa-btn"><div class="emoji">📱</div><div class="label">QR Code</div></div>
+            <div class="qa-btn"><div class="emoji">🛍️</div><div class="label">Simulate Purchase</div></div>
+            <div class="qa-btn"><div class="emoji">🎡</div><div class="label">Spin Wheel</div></div>
+            <div class="qa-btn"><div class="emoji">📡</div><div class="label">API Log</div></div>
+          </div>
+          <div class="section-title">Brands</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <div style="background:white;border-radius:10px;padding:5px 8px;font-size:10px;display:flex;align-items:center;gap:4px;box-shadow:0 1px 4px rgba(0,0,0,.06);">👔 Jaspal</div>
+            <div style="background:white;border-radius:10px;padding:5px 8px;font-size:10px;display:flex;align-items:center;gap:4px;box-shadow:0 1px 4px rgba(0,0,0,.06);">👖 CPS Chaps</div>
+            <div style="background:white;border-radius:10px;padding:5px 8px;font-size:10px;display:flex;align-items:center;gap:4px;box-shadow:0 1px 4px rgba(0,0,0,.06);">👜 Lyn</div>
+            <div style="background:white;border-radius:10px;padding:5px 8px;font-size:10px;display:flex;align-items:center;gap:4px;box-shadow:0 1px 4px rgba(0,0,0,.06);">👗 CC Double O</div>
+          </div>
+        </div>
+        <div class="tab-bar">
+          <div class="tab-item active">🏠<span>Home</span></div>
+          <div class="tab-item">🎁<span>Rewards</span></div>
+          <div class="tab-item">👤<span>Account</span></div>
+          <div class="tab-item">⋯<span>More</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="side-panel">
+    <div class="slide-label">Screen 1 / Home</div>
+    <div class="slide-title">LOYALTY DASHBOARD</div>
+    <div class="slide-desc">Members instantly see their points balance, tier status, pending earnings, and lifetime stats — alongside quick-action shortcuts to every key feature.</div>
+    <div class="feature-pills">
+      <span class="pill">Points Balance</span>
+      <span class="pill gold">JPS Plus Tier</span>
+      <span class="pill">6 Brand Partners</span>
+    </div>
+    <div class="api-badge">📡 GET /v2/customers/{id}/loyaltyDetails</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SLIDE 3 · PURCHASE & EARN (prototype screen 2)
+════════════════════════════════════════════ -->
+<div class="slide" id="slide-3">
+  <div class="phone-wrapper">
+    <div class="phone glow-gold" style="animation:phoneFloat 4s ease-in-out 1s infinite;">
+      <div class="phone-notch"></div>
+      <div class="phone-screen" style="background:#f7f7f8;display:flex;flex-direction:column;">
+        <!-- Purchase overlay -->
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:3;display:flex;align-items:center;justify-content:center;border-radius:32px;backdrop-filter:blur(4px);">
+          <div style="background:white;border-radius:20px;padding:24px;width:240px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4);">
+            <div style="font-size:32px;margin-bottom:8px;">🛍️</div>
+            <h3 style="font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:4px;">Simulate Purchase</h3>
+            <div style="background:#ede9fe;border-radius:6px;padding:4px 8px;margin-bottom:12px;display:inline-block;font-size:9px;font-weight:700;color:#6366f1;font-family:'DM Mono',monospace;">POST /v2/transactions</div>
+            <div style="border:2px solid var(--accent);border-radius:12px;font-size:24px;font-weight:700;color:#1a1a2e;padding:10px;margin-bottom:6px;font-family:'DM Mono',monospace;">฿2,500</div>
+            <div style="color:var(--gold);font-size:13px;font-weight:700;margin-bottom:14px;font-family:'DM Mono',monospace;">Earn 150 pts (1.5× Plus)</div>
+            <div style="background:linear-gradient(135deg,#10b981,#059669);color:white;border-radius:10px;padding:10px;width:100%;font-size:13px;font-weight:700;font-family:'DM Mono',monospace;">Complete Purchase ✓</div>
+          </div>
+        </div>
+        <div class="pheader"><div class="points-number">2,600</div><div class="points-label">POINTS AVAILABLE</div></div>
+        <div style="flex:1;background:#f7f7f8;"></div>
+        <div class="tab-bar">
+          <div class="tab-item active">🏠<span>Home</span></div>
+          <div class="tab-item">🎁<span>Rewards</span></div>
+          <div class="tab-item">👤<span>Account</span></div>
+          <div class="tab-item">⋯<span>More</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="side-panel">
+    <div class="slide-label">Screen 2 / Purchase</div>
+    <div class="slide-title">EARN POINTS INSTANTLY</div>
+    <div class="slide-desc">Every purchase earns points in real time. JPS Plus members earn at 1.5× the base rate. The simulator fires a live Capillary API call, updates the balance, and logs the transaction.</div>
+    <div class="feature-pills">
+      <span class="pill gold">1.5× Multiplier</span>
+      <span class="pill green">Real-time Update</span>
+      <span class="pill">Auto Tier Calc</span>
+    </div>
+    <div class="api-badge">📡 POST /v2/transactions { amount, billNumber }</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SLIDE 4 · REWARDS (prototype screen 3)
+════════════════════════════════════════════ -->
+<div class="slide" id="slide-4">
+  <div class="phone-wrapper">
+    <div class="phone glow-red" style="animation:phoneFloat 4s ease-in-out .3s infinite;">
+      <div class="phone-notch"></div>
+      <div class="phone-screen" style="display:flex;flex-direction:column;">
+        <div class="pheader" style="padding-bottom:12px;">
+          <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">Rewards</h2>
+          <div style="display:flex;gap:6px;">
+            <div style="background:var(--accent);color:white;border-radius:20px;padding:4px 12px;font-size:10px;font-family:'DM Mono',monospace;font-weight:700;">Catalog</div>
+            <div style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border-radius:20px;padding:4px 12px;font-size:10px;font-family:'DM Mono',monospace;">My Coupons</div>
+          </div>
+        </div>
+        <div style="flex:1;background:#f7f7f8;padding:10px;overflow:hidden;">
+          <div class="reward-card"><div class="reward-emoji">🎫</div><div class="reward-info"><div class="reward-name">฿100 Jaspal Voucher</div><div class="reward-pts">500 pts</div></div><button class="redeem-btn">Redeem</button></div>
+          <div class="reward-card"><div class="reward-emoji">💰</div><div class="reward-info"><div class="reward-name">20% Off Next Purchase</div><div class="reward-pts">300 pts</div></div><button class="redeem-btn">Redeem</button></div>
+          <div class="reward-card"><div class="reward-emoji">👜</div><div class="reward-info"><div class="reward-name">Free Tote Bag</div><div class="reward-pts">1,200 pts</div></div><button class="redeem-btn" style="background:#ccc;">Redeem</button></div>
+          <div class="reward-card"><div class="reward-emoji">🎁</div><div class="reward-info"><div class="reward-name">฿500 Gift Card</div><div class="reward-pts">2,000 pts</div></div><button class="redeem-btn" style="background:#ccc;">Redeem</button></div>
+        </div>
+        <div class="tab-bar">
+          <div class="tab-item">🏠<span>Home</span></div>
+          <div class="tab-item active">🎁<span>Rewards</span></div>
+          <div class="tab-item">👤<span>Account</span></div>
+          <div class="tab-item">⋯<span>More</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="side-panel">
+    <div class="slide-label">Screen 3 / Rewards</div>
+    <div class="slide-title">REDEEM ANYTIME</div>
+    <div class="slide-desc">Browse the live rewards catalog powered by Capillary. Members redeem points for vouchers, discounts, and exclusive merchandise — coupon codes generated and stored instantly.</div>
+    <div class="feature-pills">
+      <span class="pill">Multi-brand Rewards</span>
+      <span class="pill">Instant Coupons</span>
+      <span class="pill gold">Point Gating</span>
+    </div>
+    <div class="api-badge">📡 GET /rewards/catalog · POST /rewards/{id}/issue</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SLIDE 5 · SPIN THE WHEEL (prototype screen 5)
+════════════════════════════════════════════ -->
+<div class="slide" id="slide-5">
+  <div class="phone-wrapper">
+    <div class="phone glow-gold" style="animation:phoneFloat 4s ease-in-out .2s infinite;">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="wheel-screen">
+          <div class="wheel-title">🎡 SPIN &amp; WIN!</div>
+          <div style="position:relative;width:220px;height:220px;">
+            <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:22px;z-index:2;">▼</div>
+            <svg width="220" height="220" style="animation:spinDemo 8s linear infinite;">
+              <g transform="translate(110,110)">
+                <path d="M0,0 L0,-100 A100,100 0 0,1 70.7,-70.7 Z" fill="#e94560"/>
+                <path d="M0,0 L70.7,-70.7 A100,100 0 0,1 100,0 Z" fill="#f5a623"/>
+                <path d="M0,0 L100,0 A100,100 0 0,1 70.7,70.7 Z" fill="#1a1a2e"/>
+                <path d="M0,0 L70.7,70.7 A100,100 0 0,1 0,100 Z" fill="#34c759"/>
+                <path d="M0,0 L0,100 A100,100 0 0,1 -70.7,70.7 Z" fill="#0f3460"/>
+                <path d="M0,0 L-70.7,70.7 A100,100 0 0,1 -100,0 Z" fill="#ff6b6b"/>
+                <path d="M0,0 L-100,0 A100,100 0 0,1 -70.7,-70.7 Z" fill="#16213e"/>
+                <path d="M0,0 L-70.7,-70.7 A100,100 0 0,1 0,-100 Z" fill="#ffd93d"/>
+                <text x="30" y="-55" fill="white" font-size="8" font-weight="bold" text-anchor="middle" transform="rotate(-22.5)">50 pts</text>
+                <text x="70" y="-25" fill="white" font-size="8" font-weight="bold" text-anchor="middle" transform="rotate(22.5)">10 pts</text>
+                <text x="70" y="30"  fill="white" font-size="8" font-weight="bold" text-anchor="middle" transform="rotate(67.5)">100 pts</text>
+                <text x="25" y="68"  fill="white" font-size="8" font-weight="bold" text-anchor="middle" transform="rotate(112.5)">฿50 Off</text>
+                <text x="-28" y="65" fill="white" font-size="8" font-weight="bold" text-anchor="middle" transform="rotate(157.5)">25 pts</text>
+                <text x="-70" y="25" fill="white" font-size="7" font-weight="bold" text-anchor="middle" transform="rotate(202.5)">Try Again</text>
+                <text x="-68" y="-28" fill="white" font-size="8" font-weight="bold" text-anchor="middle" transform="rotate(247.5)">200 pts</text>
+                <text x="-25" y="-68" fill="white" font-size="7" font-weight="bold" text-anchor="middle" transform="rotate(292.5)">Free Ship</text>
+                <circle r="16" fill="white"/>
+              </g>
+            </svg>
+          </div>
+          <div style="background:rgba(245,166,35,.15);border:2px solid var(--gold);border-radius:14px;padding:10px 20px;">
+            <div style="color:var(--gold);font-size:16px;font-weight:700;text-align:center;font-family:'DM Mono',monospace;">🎉 You won: 200 pts!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="side-panel">
+    <div class="slide-label">Screen 5 / Gamification</div>
+    <div class="slide-title">SPIN THE WHEEL</div>
+    <div class="slide-desc">Marvel Gamification API powers Spin &amp; Win. Members play daily to win bonus points, vouchers, or free shipping — driving return visits across all 6 brands.</div>
+    <div class="feature-pills">
+      <span class="pill">Daily Spin</span>
+      <span class="pill gold">8 Prize Segments</span>
+      <span class="pill green">Instant Award</span>
+    </div>
+    <div class="api-badge">📡 POST /api/v1/gamification/spin (Marvel API) · server-side randomisation</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SLIDE 6 · 7 SKILL MODULES (PPTX Slide 3)
+════════════════════════════════════════════ -->
+<div class="slide wide-slide" id="slide-6">
+  <div class="side-panel" style="width:250px;padding:0 28px 0 0;">
+    <div class="slide-label">Skills Built</div>
+    <div class="slide-title" style="font-size:48px;">7 AI SKILL MODULES</div>
+    <div class="slide-desc" style="font-size:14px;">Each module is a reusable AI instruction set — covering every layer from docs to deployment. No component is built without a skill guiding the agent.</div>
+    <div class="feature-pills" style="margin-top:14px;">
+      <span class="pill green">All 7 Complete</span>
+      <span class="pill blue">AI-Assisted Dev</span>
+    </div>
+  </div>
+  <div class="skills-grid" style="flex:1;">
+    <div class="sk" id="sk0"><div class="sk-num">01 · BRD &amp; SDD Docs</div><div class="sk-name">Enterprise Docs</div><div class="sk-desc">Auto-generate Business Requirements &amp; System Design Documents from Figma, wireframes, or code.</div><span class="sk-tag">AI Doc Generation</span></div>
+    <div class="sk" id="sk1"><div class="sk-num">02 · Capillary API</div><div class="sk-name">Loyalty Engine</div><div class="sk-desc">Full integration: points, rewards, coupons, tiers, Neo AI recommendations &amp; Marvel gamification.</div><span class="sk-tag">Full Integration</span></div>
+    <div class="sk" id="sk2"><div class="sk-num">03 · Sanity CMS</div><div class="sk-name">Headless CMS</div><div class="sk-desc">Promotions, rewards catalog, brands &amp; FAQs with bilingual EN/TH support.</div><span class="sk-tag">EN / TH Bilingual</span></div>
+    <div class="sk" id="sk3"><div class="sk-num">04 · Figma → Code</div><div class="sk-name">Design to React</div><div class="sk-desc">Convert Figma designs to production React components via shadcn/ui + Tailwind, full a11y compliance.</div><span class="sk-tag">Accessibility</span></div>
+    <div class="sk" id="sk4"><div class="sk-num">05 · Expo Mobile</div><div class="sk-name">iOS &amp; Android</div><div class="sk-desc">Cross-platform app with EAS Build, NativeWind, Zustand state, and push notifications.</div><span class="sk-tag">Push Notifications</span></div>
+    <div class="sk" id="sk5"><div class="sk-num">06 · Git &amp; CI/CD</div><div class="sk-name">DevOps Pipeline</div><div class="sk-desc">Monorepo workflows, GitHub Actions pipelines, auto-deploys to Railway + App Store via EAS.</div><span class="sk-tag">EAS + Railway</span></div>
+    <div class="sk" id="sk6"><div class="sk-num">07 · Gamification</div><div class="sk-name">Spin &amp; Badges</div><div class="sk-desc">Spin the Wheel with server-side randomisation, fraud prevention, badges, milestones &amp; Marvel API.</div><span class="sk-tag">Marvel API</span></div>
+    <div class="sk" id="sk7" style="border-style:dashed;opacity:.4;"><div class="sk-num">Phase 2</div><div class="sk-name">Real-Time Push</div><div class="sk-desc">WebSocket live updates &amp; loyalty event push notifications.</div><span class="sk-tag" style="background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.25);color:#a5b4fc;">Planned</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SLIDE 7 · ROADMAP (PPTX Slide 4)
+════════════════════════════════════════════ -->
+<div class="slide wide-slide" id="slide-7">
+  <div class="side-panel" style="width:280px;padding:0 36px 0 0;">
+    <div class="slide-label">Progress &amp; Roadmap</div>
+    <div class="slide-title">NEXT STEPS</div>
+    <div class="slide-desc" style="font-size:14px;">The skills framework is 100% complete. Four milestones remain before the app ships live on Thailand's App Store and Google Play.</div>
+    <div class="feature-pills">
+      <span class="pill green">Skills ✅ Done</span>
+      <span class="pill gold">4 Steps to Launch</span>
+    </div>
+  </div>
+  <div class="roadmap" style="flex:1;">
+    <div class="rm" id="rm0">
+      <div class="rm-ico">✅</div>
+      <div><div class="rm-title">Skills Framework Complete</div><div class="rm-desc">All 7 skill modules documented and ready for AI-assisted development.</div><span class="rm-tag rm-done">COMPLETE</span></div>
+    </div>
+    <div class="rm" id="rm1">
+      <div class="rm-ico">🔗</div>
+      <div><div class="rm-title">Capillary Credentials</div><div class="rm-desc">Obtain client_id, client_secret &amp; till_code from Jaspal Group IT team.</div><span class="rm-tag rm-next">NEXT UP</span></div>
+    </div>
+    <div class="rm" id="rm2">
+      <div class="rm-ico">📱</div>
+      <div><div class="rm-title">Expo App Scaffolding</div><div class="rm-desc">Initialise monorepo, file-based routing, NativeWind &amp; Zustand setup.</div><span class="rm-tag rm-next">NEXT UP</span></div>
+    </div>
+    <div class="rm" id="rm3">
+      <div class="rm-ico">🚀</div>
+      <div><div class="rm-title">EAS Build &amp; CI/CD</div><div class="rm-desc">Configure GitHub Actions pipelines for staging &amp; production deploys.</div><span class="rm-tag rm-next">NEXT UP</span></div>
+    </div>
+    <div class="rm" id="rm4">
+      <div class="rm-ico">🎮</div>
+      <div><div class="rm-title">Gamification Launch</div><div class="rm-desc">Spin the Wheel + badge system integrated with Capillary Marvel API — live in app.</div><span class="rm-tag rm-next">NEXT UP</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SLIDE 8 · OUTRO
+════════════════════════════════════════════ -->
+<div class="slide center-slide" id="slide-8">
+  <div class="outro-logo">💎</div>
+  <div class="outro-title">JPS CLUB</div>
+  <div class="outro-sub">Loyalty Reimagined · Powered by Capillary Technologies · capillarytech.com</div>
+  <div class="outro-tags">
+    <div class="outro-tag">7 SKILL MODULES</div>
+    <div class="outro-tag">EXPO iOS + ANDROID</div>
+    <div class="outro-tag">CAPILLARY LOYALTY+</div>
+    <div class="outro-tag">SANITY CMS EN/TH</div>
+    <div class="outro-tag">MARVEL GAMIFICATION</div>
+    <div class="outro-tag">EAS CI/CD PIPELINE</div>
+    <div class="outro-tag">FIGMA → PRODUCTION</div>
+    <div class="outro-tag">JASPAL GROUP PCL</div>
+  </div>
+  <div style="margin-top:20px;font-size:11px;color:rgba(255,255,255,.18);font-family:'DM Mono',monospace;letter-spacing:2px;">© 2026 JASPAL GROUP PCL · JPS CLUB v2.1.0 · CONFIDENTIAL</div>
+</div>
+
+</div><!-- /stage -->
+
+<style>
+@keyframes spinDemo{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes loadBar{0%{transform:translateX(-100%);}100%{transform:translateX(200%);}}
+</style>
+<script>
+const SLIDES   = 9;
+const DURATION = 4000; // 4 s × 9 slides ≈ 36 s
+let current = 0, elapsed = 0, lastTime = null;
+const timerCircle = document.getElementById('timer-circle');
+const timerFill   = document.getElementById('timer-fill-global');
+const counterEl   = document.getElementById('slide-counter');
+const CIRCUM      = 94.2;
+
+/* progress dots */
+const pb = document.getElementById('progress-bar');
+for (let i = 0; i < SLIDES; i++) {
+  const d = document.createElement('div');
+  d.className = 'prog-dot';
+  d.onclick = () => goTo(i);
+  pb.appendChild(d);
+}
+
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function goTo(n) {
+  document.getElementById('slide-' + current)?.classList.remove('active');
+  document.querySelectorAll('.prog-dot')[current]?.classList.remove('active');
+  current = ((n % SLIDES) + SLIDES) % SLIDES;
+  document.getElementById('slide-' + current)?.classList.add('active');
+  document.querySelectorAll('.prog-dot')[current]?.classList.add('active');
+  counterEl.textContent = pad(current + 1) + ' / ' + pad(SLIDES);
+  elapsed = 0;
+  timerCircle.style.strokeDashoffset = 0;
+  timerFill.style.width = '0%';
+  runEntrance(current);
+}
+
+function runEntrance(idx) {
+  if (idx === 6) { /* skills stagger */
+    document.querySelectorAll('.sk').forEach(el => el.classList.remove('vis'));
+    setTimeout(() =>
+      document.querySelectorAll('.sk').forEach((el,i) =>
+        setTimeout(() => el.classList.add('vis'), i * 95 + 60)), 250);
+  }
+  if (idx === 7) { /* roadmap stagger */
+    document.querySelectorAll('.rm').forEach(el => el.classList.remove('vis'));
+    setTimeout(() =>
+      document.querySelectorAll('.rm').forEach((el,i) =>
+        setTimeout(() => el.classList.add('vis'), i * 130 + 60)), 250);
+  }
+}
+
+function nextSlide(){ goTo(current + 1); }
+function prevSlide(){ goTo(current - 1); }
+
+function tick(ts) {
+  if (!lastTime) lastTime = ts;
+  elapsed += ts - lastTime;
+  lastTime = ts;
+  const p = Math.min(elapsed / DURATION, 1);
+  timerCircle.style.strokeDashoffset = CIRCUM * p;
+  timerFill.style.width = (p * 100) + '%';
+  if (elapsed >= DURATION){ nextSlide(); lastTime = ts; }
+  requestAnimationFrame(tick);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+
+/* particles */
+const bgLayer = document.getElementById('bg-layer');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const sz = Math.random() * 4 + 1;
+  p.style.cssText = `
+    width:${sz}px;height:${sz}px;
+    left:${Math.random()*100}%;top:${Math.random()*100}%;
+    background:${Math.random() > .5 ? '#e94560' : '#f5a623'};
+    --dur:${4 + Math.random()*6}s;
+    --op:${.08 + Math.random()*.2};
+    animation-delay:${Math.random()*7}s;`;
+  bgLayer.appendChild(p);
+}
+
+/* set stagger transitions once */
+document.querySelectorAll('.sk').forEach((el,i) =>
+  el.style.transition = `all .38s ${i*.07}s ease`);
+document.querySelectorAll('.rm').forEach((el,i) =>
+  el.style.transition = `all .38s ${i*.08}s ease`);
+
+goTo(0);
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

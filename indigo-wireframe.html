@@ -1,0 +1,2469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IndiGo BluChip — Partner Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --indigo-blue: #1B2E6B;
+    --indigo-mid: #1E3A8A;
+    --indigo-light: #2563EB;
+    --sky: #0EA5E9;
+    --accent: #F59E0B;
+    --accent2: #10B981;
+    --danger: #EF4444;
+    --warn: #F97316;
+    --surface: #F8FAFC;
+    --surface2: #F1F5F9;
+    --border: #E2E8F0;
+    --border2: #CBD5E1;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --white: #FFFFFF;
+    --nav-w: 240px;
+    --header-h: 60px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text-primary);
+    font-size: 13px;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* ===== TOP BROWSER CHROME ===== */
+  .browser-chrome {
+    background: #1E1E1E;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .browser-dots { display: flex; gap: 6px; }
+  .bdot { width: 12px; height: 12px; border-radius: 50%; }
+  .bdot.r { background: #FF5F57; }
+  .bdot.y { background: #FEBC2E; }
+  .bdot.g { background: #28C840; }
+  .browser-url {
+    flex: 1;
+    background: #2D2D2D;
+    border-radius: 6px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    margin: 0 12px;
+    color: #9CA3AF;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+  }
+  .browser-url span { color: #E5E7EB; }
+
+  /* ===== MAIN LAYOUT ===== */
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 40px);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    height: var(--header-h);
+    background: var(--indigo-blue);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.08);
+  }
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: var(--nav-w);
+    flex-shrink: 0;
+  }
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #0EA5E9, #2563EB);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -1px;
+  }
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .logo-text .brand { font-size: 13px; font-weight: 700; color: white; letter-spacing: 0.5px; }
+  .logo-text .sub { font-size: 9px; color: #93C5FD; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .hnav-item {
+    padding: 6px 14px;
+    border-radius: 6px;
+    color: #93C5FD;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .hnav-item:hover, .hnav-item.active { background: rgba(255,255,255,0.1); color: white; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hbtn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+    color: #93C5FD;
+    font-size: 14px;
+  }
+  .hbtn:hover { background: rgba(255,255,255,0.15); color: white; }
+  .notif-dot {
+    position: relative;
+  }
+  .notif-dot::after {
+    content: '';
+    position: absolute;
+    top: 6px; right: 7px;
+    width: 7px; height: 7px;
+    background: #F59E0B;
+    border-radius: 50%;
+    border: 1.5px solid var(--indigo-blue);
+  }
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0EA5E9, #2563EB);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== BODY ===== */
+  .body-wrap {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    width: var(--nav-w);
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar::-webkit-scrollbar { width: 0; }
+
+  .nav-section {
+    padding: 16px 12px 8px;
+  }
+  .nav-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 8px;
+    margin-bottom: 4px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 500;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text-primary); }
+  .nav-item.active {
+    background: #EFF6FF;
+    color: var(--indigo-light);
+    font-weight: 600;
+  }
+  .nav-item.active .nav-icon { color: var(--indigo-light); }
+  .nav-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--danger);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+  }
+  .nav-badge.warn { background: var(--warn); }
+  .nav-badge.blue { background: var(--indigo-light); }
+  .nav-divider { height: 1px; background: var(--border); margin: 8px 12px; }
+
+  /* ===== CONTENT ===== */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 24px;
+  }
+  .content::-webkit-scrollbar { width: 6px; }
+  .content::-webkit-scrollbar-track { background: transparent; }
+  .content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ===== PAGE HEADER ===== */
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-title { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+  .page-subtitle { font-size: 12.5px; color: var(--text-secondary); margin-top: 3px; }
+  .breadcrumb {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .breadcrumb .sep { color: var(--border2); }
+  .breadcrumb .current { color: var(--text-secondary); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary { background: var(--indigo-blue); color: white; }
+  .btn-primary:hover { background: var(--indigo-mid); }
+  .btn-secondary { background: var(--surface2); color: var(--text-primary); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-outline { background: transparent; color: var(--indigo-light); border: 1.5px solid var(--indigo-light); }
+  .btn-sm { padding: 5px 12px; font-size: 11.5px; }
+  .btn-xs { padding: 3px 8px; font-size: 11px; border-radius: 5px; }
+
+  /* ===== STAT CARDS ===== */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+  .stat-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+  }
+  .stat-card.blue::before { background: linear-gradient(90deg, #1B2E6B, #2563EB); }
+  .stat-card.green::before { background: linear-gradient(90deg, #059669, #10B981); }
+  .stat-card.amber::before { background: linear-gradient(90deg, #D97706, #F59E0B); }
+  .stat-card.red::before { background: linear-gradient(90deg, #DC2626, #EF4444); }
+  .stat-card.sky::before { background: linear-gradient(90deg, #0284C7, #0EA5E9); }
+
+  .stat-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  .stat-card.blue .stat-icon { background: #EFF6FF; }
+  .stat-card.green .stat-icon { background: #ECFDF5; }
+  .stat-card.amber .stat-icon { background: #FFFBEB; }
+  .stat-card.red .stat-icon { background: #FEF2F2; }
+  .stat-card.sky .stat-icon { background: #F0F9FF; }
+
+  .stat-value { font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 11.5px; color: var(--text-secondary); font-weight: 500; }
+  .stat-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  .stat-delta.up { background: #ECFDF5; color: #059669; }
+  .stat-delta.down { background: #FEF2F2; color: #DC2626; }
+
+  /* ===== GRIDS / PANELS ===== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-3-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+
+  .panel {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+  .panel-subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .panel-body { padding: 18px; }
+
+  /* ===== TABLE ===== */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--surface2); }
+  th {
+    padding: 9px 14px;
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  td {
+    padding: 11px 14px;
+    font-size: 12.5px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody tr:hover { background: var(--surface); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ===== BADGES ===== */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+  .badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.7; }
+  .badge.active { background: #ECFDF5; color: #059669; }
+  .badge.draft { background: #F8FAFC; color: #64748B; border: 1px solid var(--border); }
+  .badge.draft::before { background: #94A3B8; }
+  .badge.pending { background: #FFFBEB; color: #D97706; }
+  .badge.uat { background: #F0F9FF; color: #0284C7; }
+  .badge.suspended { background: #FEF2F2; color: #DC2626; }
+  .badge.strategic { background: #FEF3C7; color: #92400E; }
+  .badge.core { background: #EFF6FF; color: #1D4ED8; }
+  .badge.growth { background: #ECFDF5; color: #065F46; }
+
+  /* ===== PROGRESS ===== */
+  .progress-wrap { }
+  .progress-bar-bg {
+    height: 5px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--indigo-blue), var(--sky));
+  }
+
+  /* ===== CHARTS ===== */
+  .mini-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 50px;
+  }
+  .chart-bar {
+    flex: 1;
+    background: var(--surface2);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .chart-bar:hover { background: var(--indigo-light); opacity: 0.7; }
+  .chart-bar.fill { background: linear-gradient(180deg, #2563EB, #1B2E6B); }
+  .chart-bar.fill-sky { background: linear-gradient(180deg, #0EA5E9, #0284C7); }
+  .chart-bar.fill-green { background: linear-gradient(180deg, #10B981, #059669); }
+
+  .sparkline {
+    width: 100%;
+    height: 40px;
+    overflow: visible;
+  }
+
+  /* ===== TIMELINE / STEPS ===== */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item {
+    display: flex;
+    gap: 12px;
+    padding-bottom: 14px;
+    position: relative;
+  }
+  .tl-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 24px;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+  .tl-dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-muted);
+    z-index: 1;
+  }
+  .tl-dot.done { background: #ECFDF5; border-color: #10B981; color: #059669; }
+  .tl-dot.active { background: #EFF6FF; border-color: var(--indigo-light); color: var(--indigo-light); }
+  .tl-dot.warn { background: #FFFBEB; border-color: #F59E0B; color: #D97706; }
+  .tl-content { flex: 1; padding-top: 1px; }
+  .tl-title { font-size: 12px; font-weight: 600; }
+  .tl-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ===== ALERT / NOTICE ===== */
+  .notice {
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+  .notice.info { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; }
+  .notice.warn { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
+  .notice.danger { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+  .notice.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+
+  /* ===== TABS ===== */
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    gap: 0;
+    margin-bottom: 20px;
+  }
+  .tab-item {
+    padding: 10px 18px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab-item:hover { color: var(--text-secondary); }
+  .tab-item.active { color: var(--indigo-blue); font-weight: 700; border-bottom-color: var(--indigo-blue); }
+
+  /* ===== INPUT ===== */
+  .input-group { margin-bottom: 14px; }
+  .input-label { font-size: 11.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; }
+  .input-field {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-primary);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .input-field:focus { border-color: var(--indigo-light); box-shadow: 0 0 0 3px rgba(37,99,235,0.08); }
+  .input-field::placeholder { color: var(--text-muted); }
+  select.input-field { cursor: pointer; }
+
+  /* ===== SLA TIMER ===== */
+  .sla-timer {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .sla-timer.green { background: #ECFDF5; color: #059669; }
+  .sla-timer.amber { background: #FFFBEB; color: #D97706; }
+  .sla-timer.red { background: #FEF2F2; color: #DC2626; }
+
+  /* ===== SCREEN SWITCHER (wireframe mode) ===== */
+  .screen-switcher {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    max-width: 360px;
+    justify-content: flex-end;
+    z-index: 1000;
+  }
+  .sw-btn {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: var(--indigo-blue);
+    color: white;
+    font-size: 10.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(27,46,107,0.3);
+  }
+  .sw-btn:hover { background: var(--indigo-light); }
+  .sw-btn.active { background: var(--accent); color: #1A1A1A; }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; }
+  .screen.visible { display: block; }
+
+  /* ===== PARTNER CARD ===== */
+  .partner-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .partner-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); border-color: var(--border2); }
+  .partner-logo {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .partner-info { flex: 1; min-width: 0; }
+  .partner-name { font-size: 13px; font-weight: 700; }
+  .partner-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .partner-stats { display: flex; gap: 14px; margin-top: 8px; }
+  .pstat { font-size: 10.5px; }
+  .pstat-val { font-weight: 700; font-size: 13px; }
+  .pstat-lbl { color: var(--text-muted); }
+
+  /* ===== DONUT ===== */
+  .donut-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+  .donut-center { position: absolute; text-align: center; }
+  .donut-val { font-size: 20px; font-weight: 800; }
+  .donut-lbl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ===== STEP WIZARD ===== */
+  .wizard-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 28px;
+    padding: 16px 20px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .wstep {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 0;
+    min-width: 0;
+  }
+  .wstep-circle {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .wstep-circle.done { background: #ECFDF5; border-color: #10B981; color: #059669; }
+  .wstep-circle.active { background: var(--indigo-blue); border-color: var(--indigo-blue); color: white; }
+  .wstep-info { margin-left: 8px; min-width: 0; flex: 1; }
+  .wstep-name { font-size: 11px; font-weight: 700; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wstep-status { font-size: 9.5px; color: var(--text-muted); }
+  .wstep-line { height: 1px; flex-shrink: 0; width: 20px; background: var(--border); }
+  .wstep-line.done { background: #10B981; }
+
+  /* ===== API MONITOR ===== */
+  .api-metric {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .api-metric:last-child { border-bottom: none; }
+  .api-method {
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+  }
+  .api-method.post { background: #EFF6FF; color: #1D4ED8; }
+  .api-method.get { background: #ECFDF5; color: #065F46; }
+
+  /* ===== CHECKLIST ===== */
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .check-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+  .check-icon.done { background: #ECFDF5; color: #059669; }
+  .check-icon.pend { background: #FFFBEB; color: #D97706; }
+  .check-icon.fail { background: #FEF2F2; color: #DC2626; }
+
+  /* ===== SLA BAR ===== */
+  .sla-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .sla-row:last-child { border-bottom: none; }
+  .sla-name { width: 120px; font-size: 12px; font-weight: 500; }
+  .sla-bar-wrap { flex: 1; }
+  .sla-bar {
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--surface2);
+  }
+  .sla-fill { height: 100%; border-radius: 3px; }
+  .sla-fill.ok { background: linear-gradient(90deg, #10B981, #34D399); }
+  .sla-fill.warn { background: linear-gradient(90deg, #F59E0B, #FCD34D); }
+  .sla-fill.bad { background: linear-gradient(90deg, #EF4444, #FCA5A5); }
+  .sla-pct { width: 40px; font-size: 11.5px; font-weight: 700; text-align: right; }
+
+  /* ===== ONBOARDING FORM ===== */
+  .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--indigo-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .form-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ===== RETRO CLAIMS ===== */
+  .claim-priority {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ===== FINANCE ===== */
+  .invoice-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+  }
+
+  /* ===== WATERMARK ===== */
+  .wf-label {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(27,46,107,0.9);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 0 0 8px 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    z-index: 500;
+    pointer-events: none;
+  }
+
+  /* ===== MINI SPARKLINE ===== */
+  .trend-up { color: #059669; font-size: 10px; }
+  .trend-down { color: #DC2626; font-size: 10px; }
+
+  /* ===== DATA VIZ ===== */
+  .heatmap-row { display: flex; gap: 3px; align-items: center; margin-bottom: 3px; }
+  .heatmap-label { font-size: 9px; color: var(--text-muted); width: 28px; text-align: right; }
+  .hmap-cell {
+    width: 14px; height: 14px;
+    border-radius: 2px;
+    background: var(--surface2);
+  }
+  .hmap-cell.l1 { background: #DBEAFE; }
+  .hmap-cell.l2 { background: #93C5FD; }
+  .hmap-cell.l3 { background: #3B82F6; }
+  .hmap-cell.l4 { background: #1D4ED8; }
+
+  /* ===== RIGHT PANEL ===== */
+  .right-panel {
+    width: 280px;
+    flex-shrink: 0;
+    border-left: 1px solid var(--border);
+    background: var(--white);
+    overflow-y: auto;
+    padding: 20px 16px;
+  }
+  .right-panel::-webkit-scrollbar { width: 0; }
+
+  /* ===== FILE STATUS ===== */
+  .file-status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .file-status-dot.success { background: #10B981; }
+  .file-status-dot.failed { background: #EF4444; }
+  .file-status-dot.processing { background: #F59E0B; animation: pulse 1.2s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ===== QUICK ACTIONS ===== */
+  .quick-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 4px;
+  }
+  .quick-action:hover { background: var(--surface2); }
+  .qa-icon {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .qa-text { font-size: 12px; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- Browser Chrome -->
+<div class="browser-chrome">
+  <div class="browser-dots">
+    <div class="bdot r"></div>
+    <div class="bdot y"></div>
+    <div class="bdot g"></div>
+  </div>
+  <div class="browser-url">🔒 <span>https://partners.bluchip.indigo.in</span>/dashboard</div>
+</div>
+
+<div class="wf-label" id="screenLabel">SCREEN 1 — OPERATOR DASHBOARD</div>
+
+<div class="app-shell">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-area">
+      <div class="logo-mark">6E</div>
+      <div class="logo-text">
+        <span class="brand">BluChip</span>
+        <span class="sub">Partner Portal</span>
+      </div>
+    </div>
+    <div class="header-nav">
+      <div class="hnav-item active">Dashboard</div>
+      <div class="hnav-item">Partners</div>
+      <div class="hnav-item">Onboarding</div>
+      <div class="hnav-item">Rules Engine</div>
+      <div class="hnav-item">Files & APIs</div>
+      <div class="hnav-item">Finance</div>
+      <div class="hnav-item">Reports</div>
+    </div>
+    <div class="header-right">
+      <div class="hbtn notif-dot" title="Notifications">🔔</div>
+      <div class="hbtn" title="Help">❓</div>
+      <div class="hbtn" title="Settings">⚙️</div>
+      <div class="avatar" title="Rahul S.">RS</div>
+    </div>
+  </div>
+
+  <div class="body-wrap">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="nav-section">
+        <div class="nav-label">Overview</div>
+        <div class="nav-item active">
+          <span class="nav-icon">🏠</span> Dashboard
+        </div>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <div class="nav-label">Partners</div>
+        <div class="nav-item">
+          <span class="nav-icon">🏢</span> Partner CRM
+          <span class="nav-badge blue">42</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">🚀</span> Onboarding
+          <span class="nav-badge warn">5</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">📊</span> Pipeline
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">⭐</span> Scoring & Tiers
+        </div>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <div class="nav-label">Operations</div>
+        <div class="nav-item">
+          <span class="nav-icon">⚙️</span> Earn Rules
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">🎟️</span> Burn Rules
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">🔄</span> Retro Claims
+          <span class="nav-badge">12</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">⚠️</span> IROPS
+          <span class="nav-badge warn">3</span>
+        </div>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <div class="nav-label">Integration</div>
+        <div class="nav-item">
+          <span class="nav-icon">📁</span> File Management
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">🔌</span> API Monitor
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">💳</span> Transactions
+        </div>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <div class="nav-label">Business</div>
+        <div class="nav-item">
+          <span class="nav-icon">💰</span> Finance & Billing
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">📣</span> Promotions
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">🎁</span> Rewards Catalogue
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">📄</span> Legal & Contracts
+        </div>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <div class="nav-label">Admin</div>
+        <div class="nav-item">
+          <span class="nav-icon">👥</span> User Management
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">🔧</span> Settings
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">📋</span> Audit Logs
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="content" id="mainContent">
+
+      <!-- ===== SCREEN 1: OPERATOR DASHBOARD ===== -->
+      <div class="screen visible" id="screen1">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">Home <span class="sep">›</span> <span class="current">Dashboard</span></div>
+            <div class="page-title">Operator Dashboard</div>
+            <div class="page-subtitle">Program-wide metrics · Tuesday, 24 Feb 2026 · 10:42 IST</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary btn-sm">📥 Export Report</button>
+            <button class="btn btn-primary btn-sm">+ Add New Partner</button>
+          </div>
+        </div>
+
+        <div class="notice warn">
+          <span>⚠️</span>
+          <div><strong>3 action items need your attention:</strong> 2 partners pending approval, 1 contract expiring in 14 days. <a href="#" style="color:inherit;text-decoration:underline;">View all →</a></div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-icon">🏢</div>
+            <div class="stat-value" style="color:#1B2E6B">42</div>
+            <div class="stat-label">Active Partners</div>
+            <div class="stat-delta up">▲ 3 this month</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon">✈️</div>
+            <div class="stat-value" style="color:#059669">1.28M</div>
+            <div class="stat-label">IBCs Credited (MTD)</div>
+            <div class="stat-delta up">▲ 12.4% vs last month</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-icon">📁</div>
+            <div class="stat-value" style="color:#D97706">97.3%</div>
+            <div class="stat-label">File Processing SLA</div>
+            <div class="stat-delta down">▼ 0.8% vs target</div>
+          </div>
+          <div class="stat-card sky">
+            <div class="stat-icon">🔌</div>
+            <div class="stat-value" style="color:#0284C7">99.1%</div>
+            <div class="stat-label">API Success Rate</div>
+            <div class="stat-delta up">▲ 0.3% vs yesterday</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px;">
+          <!-- Partner Status Panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Partner Summary</div>
+                <div class="panel-subtitle">By status & industry tier</div>
+              </div>
+              <button class="btn btn-secondary btn-xs">View All →</button>
+            </div>
+            <div class="panel-body">
+              <div style="display:flex; gap:16px; margin-bottom:16px;">
+                <div style="text-align:center; flex:1;">
+                  <div style="font-size:22px; font-weight:800; color:#059669;">38</div>
+                  <div style="font-size:10.5px; color:var(--text-muted);">Active</div>
+                </div>
+                <div style="text-align:center; flex:1;">
+                  <div style="font-size:22px; font-weight:800; color:#D97706;">5</div>
+                  <div style="font-size:10.5px; color:var(--text-muted);">In Onboarding</div>
+                </div>
+                <div style="text-align:center; flex:1;">
+                  <div style="font-size:22px; font-weight:800; color:#6366F1;">3</div>
+                  <div style="font-size:10.5px; color:var(--text-muted);">UAT</div>
+                </div>
+                <div style="text-align:center; flex:1;">
+                  <div style="font-size:22px; font-weight:800; color:#EF4444;">2</div>
+                  <div style="font-size:10.5px; color:var(--text-muted);">Suspended</div>
+                </div>
+              </div>
+              <div style="margin-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+                  <span style="color:var(--text-secondary);">Strategic <span style="font-weight:700; color:var(--text-primary);">8</span></span>
+                  <span style="color:var(--text-muted);">19%</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:19%; background:linear-gradient(90deg,#92400E,#F59E0B);"></div></div>
+              </div>
+              <div style="margin-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+                  <span style="color:var(--text-secondary);">Core <span style="font-weight:700; color:var(--text-primary);">14</span></span>
+                  <span style="color:var(--text-muted);">33%</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:33%; background:linear-gradient(90deg,#1D4ED8,#3B82F6);"></div></div>
+              </div>
+              <div style="margin-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+                  <span style="color:var(--text-secondary);">Growth <span style="font-weight:700; color:var(--text-primary);">12</span></span>
+                  <span style="color:var(--text-muted);">29%</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:29%; background:linear-gradient(90deg,#065F46,#10B981);"></div></div>
+              </div>
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+                  <span style="color:var(--text-secondary);">Long-tail <span style="font-weight:700; color:var(--text-primary);">8</span></span>
+                  <span style="color:var(--text-muted);">19%</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:19%; background:linear-gradient(90deg,#475569,#94A3B8);"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Onboarding Pipeline -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Onboarding Pipeline</div>
+                <div class="panel-subtitle">Partners in progress</div>
+              </div>
+              <button class="btn btn-secondary btn-xs">Manage →</button>
+            </div>
+            <div class="panel-body">
+              <div class="timeline">
+                <div class="tl-item">
+                  <div class="tl-dot active">5</div>
+                  <div class="tl-content">
+                    <div class="tl-title">Draft / In-Progress</div>
+                    <div class="tl-desc">HDFC Bank Rewards, Myntra, Club Mahindra, Reliance JioMart, BigBasket</div>
+                  </div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-dot warn">2</div>
+                  <div class="tl-content">
+                    <div class="tl-title">Pending Approval</div>
+                    <div class="tl-desc">Taj Hotels (awaiting Legal), BookMyShow</div>
+                  </div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-dot active">3</div>
+                  <div class="tl-content">
+                    <div class="tl-title">UAT In Progress</div>
+                    <div class="tl-desc">Swiggy, Zomato Gold, PharmEasy</div>
+                  </div>
+                </div>
+                <div class="tl-item" style="padding-bottom:0">
+                  <div class="tl-dot done">✓</div>
+                  <div class="tl-content">
+                    <div class="tl-title">Go-Live Ready</div>
+                    <div class="tl-desc">Amazon Pay — Activation scheduled 28 Feb</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px;">
+          <!-- File Operations -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">File Operations Today</div>
+                <div class="panel-subtitle">Inbound & outbound batch files</div>
+              </div>
+              <button class="btn btn-secondary btn-xs">View Files →</button>
+            </div>
+            <div class="panel-body">
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; margin-bottom:14px;">
+                <div style="text-align:center; padding:10px; background:var(--surface2); border-radius:8px;">
+                  <div style="font-size:20px; font-weight:800; color:var(--text-primary);">84</div>
+                  <div style="font-size:10px; color:var(--text-muted);">Received</div>
+                </div>
+                <div style="text-align:center; padding:10px; background:#ECFDF5; border-radius:8px;">
+                  <div style="font-size:20px; font-weight:800; color:#059669;">79</div>
+                  <div style="font-size:10px; color:var(--text-muted);">Processed</div>
+                </div>
+                <div style="text-align:center; padding:10px; background:#FEF2F2; border-radius:8px;">
+                  <div style="font-size:20px; font-weight:800; color:#DC2626;">3</div>
+                  <div style="font-size:10px; color:var(--text-muted);">Failed</div>
+                </div>
+                <div style="text-align:center; padding:10px; background:#FFFBEB; border-radius:8px;">
+                  <div style="font-size:20px; font-weight:800; color:#D97706;">2</div>
+                  <div style="font-size:10px; color:var(--text-muted);">SLA Breach</div>
+                </div>
+              </div>
+              <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.8px;">Recent Files</div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+                  <div class="file-status-dot success"></div>
+                  <span style="flex:1; color:var(--text-secondary);">HDFC_ACCRUAL_20260224_001.csv</span>
+                  <span style="color:var(--text-muted); font-size:10.5px;">47,382 rec</span>
+                  <div class="badge active" style="font-size:9.5px;">Done</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+                  <div class="file-status-dot processing"></div>
+                  <span style="flex:1; color:var(--text-secondary);">SWIGGY_BURN_20260224_001.txt</span>
+                  <span style="color:var(--text-muted); font-size:10.5px;">12,801 rec</span>
+                  <div class="badge pending" style="font-size:9.5px;">Processing</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+                  <div class="file-status-dot failed"></div>
+                  <span style="flex:1; color:var(--text-secondary);">TAJ_ACCRUAL_20260224_002.csv</span>
+                  <span style="color:var(--text-muted); font-size:10.5px;">Schema err</span>
+                  <div class="badge suspended" style="font-size:9.5px;">Failed</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- API Health -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">API Health Monitor</div>
+                <div class="panel-subtitle">Live — Last updated 2 min ago</div>
+              </div>
+              <button class="btn btn-secondary btn-xs">Full View →</button>
+            </div>
+            <div class="panel-body">
+              <div class="api-metric">
+                <div class="api-method post">POST</div>
+                <span style="flex:1; font-size:12px;">/v2/accrual/validate</span>
+                <span class="sla-timer green">138ms</span>
+                <span style="font-size:10.5px; color:#059669; font-weight:600;">99.4%</span>
+              </div>
+              <div class="api-metric">
+                <div class="api-method post">POST</div>
+                <span style="flex:1; font-size:12px;">/v2/accrual/post</span>
+                <span class="sla-timer green">210ms</span>
+                <span style="font-size:10.5px; color:#059669; font-weight:600;">98.8%</span>
+              </div>
+              <div class="api-metric">
+                <div class="api-method post">POST</div>
+                <span style="flex:1; font-size:12px;">/v2/retro/validate</span>
+                <span class="sla-timer amber">387ms</span>
+                <span style="font-size:10.5px; color:#D97706; font-weight:600;">97.1%</span>
+              </div>
+              <div class="api-metric">
+                <div class="api-method get">GET</div>
+                <span style="flex:1; font-size:12px;">/v2/member/validate</span>
+                <span class="sla-timer green">94ms</span>
+                <span style="font-size:10.5px; color:#059669; font-weight:600;">99.7%</span>
+              </div>
+              <div class="api-metric">
+                <div class="api-method post">POST</div>
+                <span style="flex:1; font-size:12px;">/v2/burn/redeem</span>
+                <span class="sla-timer red">621ms</span>
+                <span style="font-size:10.5px; color:#DC2626; font-weight:600;">94.2%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accrual + Alerts row -->
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">IBC Accrual Summary (MTD)</div>
+                <div class="panel-subtitle">February 2026 · Daily trend</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div style="display:flex; gap:16px; margin-bottom:14px;">
+                <div>
+                  <div style="font-size:10.5px; color:var(--text-muted);">Credited</div>
+                  <div style="font-size:18px; font-weight:800; color:#059669;">1,284,721</div>
+                </div>
+                <div>
+                  <div style="font-size:10.5px; color:var(--text-muted);">Rejected</div>
+                  <div style="font-size:18px; font-weight:800; color:#DC2626;">38,204</div>
+                </div>
+                <div>
+                  <div style="font-size:10.5px; color:var(--text-muted);">Rejection Rate</div>
+                  <div style="font-size:18px; font-weight:800; color:#D97706;">2.89%</div>
+                </div>
+              </div>
+              <div class="mini-chart">
+                <div class="chart-bar fill" style="height:30%"></div>
+                <div class="chart-bar fill" style="height:45%"></div>
+                <div class="chart-bar fill" style="height:38%"></div>
+                <div class="chart-bar fill" style="height:55%"></div>
+                <div class="chart-bar fill" style="height:60%"></div>
+                <div class="chart-bar fill" style="height:52%"></div>
+                <div class="chart-bar fill" style="height:70%"></div>
+                <div class="chart-bar fill" style="height:65%"></div>
+                <div class="chart-bar fill" style="height:80%"></div>
+                <div class="chart-bar fill" style="height:75%"></div>
+                <div class="chart-bar fill" style="height:88%"></div>
+                <div class="chart-bar fill" style="height:72%"></div>
+                <div class="chart-bar fill" style="height:90%"></div>
+                <div class="chart-bar fill" style="height:85%"></div>
+                <div class="chart-bar fill" style="height:78%"></div>
+                <div class="chart-bar fill" style="height:95%"></div>
+                <div class="chart-bar fill" style="height:88%"></div>
+                <div class="chart-bar fill" style="height:100%"></div>
+                <div class="chart-bar fill" style="height:92%"></div>
+                <div class="chart-bar" style="height:55%; background:var(--surface2);"></div>
+                <div class="chart-bar" style="height:40%; background:var(--surface2);"></div>
+                <div class="chart-bar" style="height:48%; background:var(--surface2);"></div>
+                <div class="chart-bar" style="height:35%; background:var(--surface2);"></div>
+                <div class="chart-bar" style="height:20%; background:var(--surface2);"></div>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:9.5px; color:var(--text-muted); margin-top:4px;">
+                <span>Feb 1</span><span>Feb 8</span><span>Feb 15</span><span>Feb 22</span><span>Feb 28</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Alerts & Open Actions</div>
+                <div class="panel-subtitle">Requires attention today</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <div class="notice danger" style="margin-bottom:0; padding:8px 12px;">
+                  <span>🔴</span>
+                  <div><strong>Burn API degraded</strong> — /v2/burn/redeem at 94.2% · P95 >600ms <span style="font-size:10px;opacity:0.7;margin-left:6px;">2 min ago</span></div>
+                </div>
+                <div class="notice warn" style="margin-bottom:0; padding:8px 12px;">
+                  <span>⚠️</span>
+                  <div><strong>TAJ file schema error</strong> — 3,482 records failed · Handback sent <span style="font-size:10px;opacity:0.7;margin-left:6px;">45 min ago</span></div>
+                </div>
+                <div class="notice warn" style="margin-bottom:0; padding:8px 12px;">
+                  <span>⚠️</span>
+                  <div><strong>Contract expiry</strong> — MakeMyTrip MSA expires in 14 days. Renewal pending Legal</div>
+                </div>
+                <div class="notice info" style="margin-bottom:0; padding:8px 12px;">
+                  <span>ℹ️</span>
+                  <div><strong>2 partners pending approval</strong> — Taj Hotels (Legal), BookMyShow (Finance)</div>
+                </div>
+                <div class="notice info" style="margin-bottom:0; padding:8px 12px;">
+                  <span>ℹ️</span>
+                  <div><strong>12 retro claims</strong> — 4 approaching SLA deadline in &lt;48 hours</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN 2: PARTNER CRM LIST ===== -->
+      <div class="screen" id="screen2">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">Home <span class="sep">›</span> <span class="current">Partner CRM</span></div>
+            <div class="page-title">Partner Directory</div>
+            <div class="page-subtitle">42 active partners across 8 industry verticals</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary btn-sm">📥 Export CSV</button>
+            <button class="btn btn-primary btn-sm">+ New Partner</button>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="panel" style="margin-bottom:16px;">
+          <div class="panel-body" style="padding:12px 16px;">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <input class="input-field" style="width:220px; height:34px;" placeholder="🔍  Search partners...">
+              <select class="input-field" style="width:140px; height:34px;">
+                <option>All Industries</option>
+                <option>BFSI</option>
+                <option>E-Commerce</option>
+                <option>Hospitality</option>
+                <option>F&B</option>
+                <option>Healthcare</option>
+              </select>
+              <select class="input-field" style="width:120px; height:34px;">
+                <option>All Tiers</option>
+                <option>Strategic</option>
+                <option>Core</option>
+                <option>Growth</option>
+                <option>Long-tail</option>
+              </select>
+              <select class="input-field" style="width:120px; height:34px;">
+                <option>All Status</option>
+                <option>Active</option>
+                <option>Draft</option>
+                <option>UAT</option>
+                <option>Suspended</option>
+              </select>
+              <select class="input-field" style="width:140px; height:34px;">
+                <option>All Owners</option>
+                <option>Rahul Sharma</option>
+                <option>Priya Nair</option>
+                <option>Aditya Kumar</option>
+              </select>
+              <button class="btn btn-secondary btn-sm" style="margin-left:auto;">Clear Filters</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Partner Cards Grid -->
+        <div class="grid-3" style="margin-bottom:16px;">
+          <div class="partner-card">
+            <div class="partner-logo" style="background:#EFF6FF; color:#1D4ED8;">HDFC</div>
+            <div class="partner-info">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div class="partner-name">HDFC Bank Rewards</div>
+                <div class="badge strategic">Strategic</div>
+              </div>
+              <div class="partner-meta">BFSI · Earn + Burn · Since Jan 2022</div>
+              <div class="partner-stats">
+                <div class="pstat"><div class="pstat-val">2.1M</div><div class="pstat-lbl">IBCs/month</div></div>
+                <div class="pstat"><div class="pstat-val">₹0.82</div><div class="pstat-lbl">per IBC</div></div>
+              </div>
+              <div style="margin-top:8px;"><div class="badge active">Active</div></div>
+            </div>
+          </div>
+
+          <div class="partner-card">
+            <div class="partner-logo" style="background:#FEF3C7; color:#92400E;">TAJ</div>
+            <div class="partner-info">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div class="partner-name">Taj Hotels</div>
+                <div class="badge core">Core</div>
+              </div>
+              <div class="partner-meta">Hospitality · Earn · Since Mar 2023</div>
+              <div class="partner-stats">
+                <div class="pstat"><div class="pstat-val">380K</div><div class="pstat-lbl">IBCs/month</div></div>
+                <div class="pstat"><div class="pstat-val">₹0.75</div><div class="pstat-lbl">per IBC</div></div>
+              </div>
+              <div style="margin-top:8px;"><div class="badge pending">Pending Approval</div></div>
+            </div>
+          </div>
+
+          <div class="partner-card">
+            <div class="partner-logo" style="background:#ECFDF5; color:#059669;">SWG</div>
+            <div class="partner-info">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div class="partner-name">Swiggy</div>
+                <div class="badge core">Core</div>
+              </div>
+              <div class="partner-meta">F&B · Earn · Since Jun 2023</div>
+              <div class="partner-stats">
+                <div class="pstat"><div class="pstat-val">920K</div><div class="pstat-lbl">IBCs/month</div></div>
+                <div class="pstat"><div class="pstat-val">₹0.78</div><div class="pstat-lbl">per IBC</div></div>
+              </div>
+              <div style="margin-top:8px;"><div class="badge uat">UAT</div></div>
+            </div>
+          </div>
+
+          <div class="partner-card">
+            <div class="partner-logo" style="background:#F3E8FF; color:#7C3AED;">AXI</div>
+            <div class="partner-info">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div class="partner-name">Axis Bank EdgeRewards</div>
+                <div class="badge strategic">Strategic</div>
+              </div>
+              <div class="partner-meta">BFSI · Earn + Burn · Since Nov 2021</div>
+              <div class="partner-stats">
+                <div class="pstat"><div class="pstat-val">1.4M</div><div class="pstat-lbl">IBCs/month</div></div>
+                <div class="pstat"><div class="pstat-val">₹0.85</div><div class="pstat-lbl">per IBC</div></div>
+              </div>
+              <div style="margin-top:8px;"><div class="badge active">Active</div></div>
+            </div>
+          </div>
+
+          <div class="partner-card">
+            <div class="partner-logo" style="background:#FEE2E2; color:#DC2626;">MMT</div>
+            <div class="partner-info">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div class="partner-name">MakeMyTrip</div>
+                <div class="badge core">Core</div>
+              </div>
+              <div class="partner-meta">Travel OTA · Earn + Burn · Since Feb 2022</div>
+              <div class="partner-stats">
+                <div class="pstat"><div class="pstat-val">640K</div><div class="pstat-lbl">IBCs/month</div></div>
+                <div class="pstat"><div class="pstat-val">₹0.72</div><div class="pstat-lbl">per IBC</div></div>
+              </div>
+              <div style="margin-top:8px;"><div class="badge active">Active</div></div>
+            </div>
+          </div>
+
+          <div class="partner-card">
+            <div class="partner-logo" style="background:#F0FDF4; color:#166534;">AMZ</div>
+            <div class="partner-info">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div class="partner-name">Amazon Pay</div>
+                <div class="badge growth">Growth</div>
+              </div>
+              <div class="partner-meta">E-Commerce · Earn · Onboarding</div>
+              <div class="partner-stats">
+                <div class="pstat"><div class="pstat-val">—</div><div class="pstat-lbl">IBCs/month</div></div>
+                <div class="pstat"><div class="pstat-val">₹0.77</div><div class="pstat-lbl">agreed rate</div></div>
+              </div>
+              <div style="margin-top:8px;"><div class="badge draft">Go-Live Ready</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Table View -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">All Partners</div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-secondary btn-xs">Grid View</button>
+              <button class="btn btn-primary btn-xs">Table View</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Partner</th>
+                  <th>Industry</th>
+                  <th>Tier</th>
+                  <th>Type</th>
+                  <th>IBCs (MTD)</th>
+                  <th>API Health</th>
+                  <th>Contract Expiry</th>
+                  <th>Status</th>
+                  <th>Owner</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>HDFC Bank Rewards</strong></td>
+                  <td>BFSI</td>
+                  <td><span class="badge strategic">Strategic</span></td>
+                  <td>Post-paid</td>
+                  <td>2,184,302</td>
+                  <td><span style="color:#059669; font-weight:600;">99.4%</span></td>
+                  <td>Dec 31, 2026</td>
+                  <td><span class="badge active">Active</span></td>
+                  <td>Rahul S.</td>
+                  <td><button class="btn btn-secondary btn-xs">View</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Axis Bank EdgeRewards</strong></td>
+                  <td>BFSI</td>
+                  <td><span class="badge strategic">Strategic</span></td>
+                  <td>Post-paid</td>
+                  <td>1,402,100</td>
+                  <td><span style="color:#059669; font-weight:600;">98.8%</span></td>
+                  <td>Jun 30, 2026</td>
+                  <td><span class="badge active">Active</span></td>
+                  <td>Priya N.</td>
+                  <td><button class="btn btn-secondary btn-xs">View</button></td>
+                </tr>
+                <tr>
+                  <td><strong>MakeMyTrip</strong></td>
+                  <td>Travel OTA</td>
+                  <td><span class="badge core">Core</span></td>
+                  <td>Post-paid</td>
+                  <td>641,820</td>
+                  <td><span style="color:#D97706; font-weight:600;">97.1%</span></td>
+                  <td style="color:#DC2626; font-weight:600;">Mar 10, 2026 ⚠️</td>
+                  <td><span class="badge active">Active</span></td>
+                  <td>Aditya K.</td>
+                  <td><button class="btn btn-secondary btn-xs">View</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Swiggy</strong></td>
+                  <td>F&B</td>
+                  <td><span class="badge core">Core</span></td>
+                  <td>Post-paid</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="badge uat">UAT</span></td>
+                  <td>Rahul S.</td>
+                  <td><button class="btn btn-secondary btn-xs">View</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Taj Hotels</strong></td>
+                  <td>Hospitality</td>
+                  <td><span class="badge core">Core</span></td>
+                  <td>Prepaid</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="badge pending">Pending Approval</span></td>
+                  <td>Priya N.</td>
+                  <td><button class="btn btn-primary btn-xs">Approve</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN 3: PARTNER ONBOARDING WIZARD ===== -->
+      <div class="screen" id="screen3">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">Home <span class="sep">›</span> Partners <span class="sep">›</span> <span class="current">New Partner Onboarding</span></div>
+            <div class="page-title">Partner Onboarding</div>
+            <div class="page-subtitle">Step-by-step setup — all changes saved in Draft mode</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary btn-sm">💾 Save Draft</button>
+            <button class="btn btn-secondary btn-sm">✕ Cancel</button>
+          </div>
+        </div>
+
+        <!-- Wizard Steps -->
+        <div class="wizard-steps">
+          <div class="wstep">
+            <div class="wstep-circle done">✓</div>
+            <div class="wstep-info">
+              <div class="wstep-name">Template</div>
+              <div class="wstep-status" style="color:#059669;">Done</div>
+            </div>
+          </div>
+          <div class="wstep-line done"></div>
+          <div class="wstep">
+            <div class="wstep-circle done">✓</div>
+            <div class="wstep-info">
+              <div class="wstep-name">Profile</div>
+              <div class="wstep-status" style="color:#059669;">Done</div>
+            </div>
+          </div>
+          <div class="wstep-line done"></div>
+          <div class="wstep">
+            <div class="wstep-circle done">✓</div>
+            <div class="wstep-info">
+              <div class="wstep-name">Contacts</div>
+              <div class="wstep-status" style="color:#059669;">Done</div>
+            </div>
+          </div>
+          <div class="wstep-line done"></div>
+          <div class="wstep">
+            <div class="wstep-circle done">✓</div>
+            <div class="wstep-info">
+              <div class="wstep-name">Due Diligence</div>
+              <div class="wstep-status" style="color:#059669;">Done</div>
+            </div>
+          </div>
+          <div class="wstep-line done"></div>
+          <div class="wstep">
+            <div class="wstep-circle active">5</div>
+            <div class="wstep-info">
+              <div class="wstep-name">Integration</div>
+              <div class="wstep-status" style="color:var(--indigo-light);">In Progress</div>
+            </div>
+          </div>
+          <div class="wstep-line"></div>
+          <div class="wstep">
+            <div class="wstep-circle">6</div>
+            <div class="wstep-info">
+              <div class="wstep-name">Custom Fields</div>
+              <div class="wstep-status">Pending</div>
+            </div>
+          </div>
+          <div class="wstep-line"></div>
+          <div class="wstep">
+            <div class="wstep-circle">7</div>
+            <div class="wstep-info">
+              <div class="wstep-name">Rules</div>
+              <div class="wstep-status">Pending</div>
+            </div>
+          </div>
+          <div class="wstep-line"></div>
+          <div class="wstep">
+            <div class="wstep-circle">8</div>
+            <div class="wstep-info">
+              <div class="wstep-name">Go-Live</div>
+              <div class="wstep-status">Pending</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 Content: Integration Setup -->
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Step 5 — Integration Setup</div>
+                <div class="panel-subtitle">Partner: Amazon Pay · Type: Non-Airline (Type A)</div>
+              </div>
+              <div class="badge draft" style="padding:4px 10px;">📝 Draft Mode</div>
+            </div>
+            <div class="panel-body">
+              <div class="tabs" style="margin-bottom:16px;">
+                <div class="tab-item active">API Integration</div>
+                <div class="tab-item">File (SFTP)</div>
+              </div>
+
+              <div class="form-section-title">API Endpoint Configuration</div>
+              <div class="form-grid-2">
+                <div class="input-group">
+                  <div class="input-label">Accrual API Endpoint (UAT) *</div>
+                  <input class="input-field" value="https://uat-api.amazonpay.com/bluchip/accrue" placeholder="https://...">
+                </div>
+                <div class="input-group">
+                  <div class="input-label">Accrual API Endpoint (Prod) *</div>
+                  <input class="input-field" placeholder="https://..." value="">
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="input-label">Authentication Type *</div>
+                <select class="input-field">
+                  <option selected>OAuth 2.0 (Bearer Token)</option>
+                  <option>API Key</option>
+                  <option>HMAC Signature</option>
+                </select>
+              </div>
+
+              <div class="form-section-title">Field Configuration</div>
+              <div class="input-group">
+                <div class="input-label">Active Fields (select subset of available fields)</div>
+                <div style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:10px; display:flex; flex-wrap:wrap; gap:6px;">
+                  <div style="padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:600; background:var(--indigo-blue); color:white; cursor:pointer;">member_id ✓</div>
+                  <div style="padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:600; background:var(--indigo-blue); color:white; cursor:pointer;">txn_amount ✓</div>
+                  <div style="padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:600; background:var(--indigo-blue); color:white; cursor:pointer;">txn_date ✓</div>
+                  <div style="padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:600; background:var(--indigo-blue); color:white; cursor:pointer;">order_id ✓</div>
+                  <div style="padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:600; background:var(--indigo-blue); color:white; cursor:pointer;">product_cat ✓</div>
+                  <div style="padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:500; background:var(--surface2); border:1px solid var(--border); cursor:pointer; color:var(--text-muted);">store_id</div>
+                  <div style="padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:500; background:var(--surface2); border:1px solid var(--border); cursor:pointer; color:var(--text-muted);">channel</div>
+                  <div style="padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:500; background:var(--surface2); border:1px solid var(--border); cursor:pointer; color:var(--text-muted);">discount_amt</div>
+                  <div style="padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:500; background:var(--surface2); border:1px solid var(--border); cursor:pointer; color:var(--text-muted);">wallet_type</div>
+                  <div style="padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:500; background:var(--surface2); border:1px solid var(--border); cursor:pointer; color:var(--text-muted);">partner_ref</div>
+                </div>
+                <div style="font-size:10.5px; color:var(--text-muted); margin-top:4px;">5 of 10 fields selected · Click to toggle</div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="input-group">
+                  <div class="input-label">Daily Transaction Limit (IBCs/day) *</div>
+                  <input class="input-field" value="1000" type="number">
+                </div>
+                <div class="input-group">
+                  <div class="input-label">Schema Version *</div>
+                  <select class="input-field">
+                    <option selected>v2.1 (Latest)</option>
+                    <option>v2.0</option>
+                    <option>v1.9</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <div class="input-label">Idempotency Key Strategy *</div>
+                <select class="input-field">
+                  <option selected>Order ID + Date (Recommended)</option>
+                  <option>Custom UUID</option>
+                  <option>Transaction Reference</option>
+                </select>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; margin-top:4px;">
+                <button class="btn btn-secondary">← Back</button>
+                <button class="btn btn-primary">Next: Custom Fields →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Progress & Go-Live Checklist -->
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">Go-Live Checklist</div>
+                <div class="panel-subtitle">8 gates required for activation</div>
+              </div>
+              <div class="panel-body">
+                <div class="checklist-item">
+                  <div class="check-icon done">✓</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;">Company Profile</div>
+                    <div style="font-size:11px; color:var(--text-muted);">All mandatory fields populated</div>
+                  </div>
+                  <span style="font-size:10.5px; color:#059669; font-weight:600;">Completed</span>
+                </div>
+                <div class="checklist-item">
+                  <div class="check-icon done">✓</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;">SPOCs Assigned</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Business, Tech, Finance, Legal</div>
+                  </div>
+                  <span style="font-size:10.5px; color:#059669; font-weight:600;">Completed</span>
+                </div>
+                <div class="checklist-item">
+                  <div class="check-icon done">✓</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;">Due Diligence Docs</div>
+                    <div style="font-size:11px; color:var(--text-muted);">NDA, DPA, MSA uploaded & signed</div>
+                  </div>
+                  <span style="font-size:10.5px; color:#059669; font-weight:600;">Completed</span>
+                </div>
+                <div class="checklist-item">
+                  <div class="check-icon pend">⏳</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;">Integration Config</div>
+                    <div style="font-size:11px; color:var(--text-muted);">API endpoints & field selection</div>
+                  </div>
+                  <span style="font-size:10.5px; color:#D97706; font-weight:600;">In Progress</span>
+                </div>
+                <div class="checklist-item">
+                  <div class="check-icon pend">⏳</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;">UAT Test Evidence</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Integration testing on UAT env</div>
+                  </div>
+                  <span style="font-size:10.5px; color:var(--text-muted); font-weight:600;">Pending</span>
+                </div>
+                <div class="checklist-item">
+                  <div class="check-icon pend">⏳</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;">Earn Rule Configured</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Rules reviewed & signed off</div>
+                  </div>
+                  <span style="font-size:10.5px; color:var(--text-muted); font-weight:600;">Pending</span>
+                </div>
+                <div class="checklist-item">
+                  <div class="check-icon pend">⏳</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;">Billing Configuration</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Rate, cycle, format confirmed</div>
+                  </div>
+                  <span style="font-size:10.5px; color:var(--text-muted); font-weight:600;">Pending</span>
+                </div>
+                <div class="checklist-item">
+                  <div class="check-icon pend">⏳</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;">Manager Approval</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Final sign-off before go-live</div>
+                  </div>
+                  <span style="font-size:10.5px; color:var(--text-muted); font-weight:600;">Pending</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">Onboarding State</div>
+              </div>
+              <div class="panel-body">
+                <div style="display:flex; align-items:center; justify-content:center; gap:12px; padding:8px 0;">
+                  <div style="text-align:center; padding:10px 14px; background:var(--indigo-blue); border-radius:8px; color:white; font-size:11px; font-weight:700; flex:1;">DRAFT</div>
+                  <span style="color:var(--text-muted); font-size:18px;">→</span>
+                  <div style="text-align:center; padding:10px 14px; background:var(--surface2); border-radius:8px; color:var(--text-muted); font-size:11px; font-weight:600; flex:1; border:1px dashed var(--border2);">PENDING</div>
+                  <span style="color:var(--text-muted); font-size:18px;">→</span>
+                  <div style="text-align:center; padding:10px 14px; background:var(--surface2); border-radius:8px; color:var(--text-muted); font-size:11px; font-weight:600; flex:1; border:1px dashed var(--border2);">UAT</div>
+                  <span style="color:var(--text-muted); font-size:18px;">→</span>
+                  <div style="text-align:center; padding:10px 14px; background:var(--surface2); border-radius:8px; color:var(--text-muted); font-size:11px; font-weight:600; flex:1; border:1px dashed var(--border2);">ACTIVE</div>
+                </div>
+                <div style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:8px;">Complete all 8 checklist gates to submit for approval</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN 4: EARN RULES ENGINE ===== -->
+      <div class="screen" id="screen4">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">Home <span class="sep">›</span> Operations <span class="sep">›</span> <span class="current">Earn Rules Engine</span></div>
+            <div class="page-title">Earn Rules Engine</div>
+            <div class="page-subtitle">HDFC Bank Rewards · Configure IBC accrual logic</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary btn-sm">📋 Rule History</button>
+            <button class="btn btn-primary btn-sm">+ New Rule</button>
+          </div>
+        </div>
+
+        <!-- Rule List -->
+        <div class="panel" style="margin-bottom:16px;">
+          <div class="panel-header">
+            <div class="panel-title">Active Rules — HDFC Bank Rewards</div>
+            <div style="display:flex; gap:6px;">
+              <select class="input-field" style="width:160px; height:32px; font-size:11.5px;">
+                <option>All Rule Types</option>
+                <option>Fare-based</option>
+                <option>Distance-based</option>
+                <option>Class-based</option>
+              </select>
+              <select class="input-field" style="width:120px; height:32px; font-size:11.5px;">
+                <option>All Status</option>
+                <option>Active</option>
+                <option>Draft</option>
+                <option>Expired</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rule ID</th>
+                  <th>Rule Name</th>
+                  <th>Type</th>
+                  <th>Rate</th>
+                  <th>Effective Dates</th>
+                  <th>Priority</th>
+                  <th>Stacking</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">RULE-001</span></td>
+                  <td><strong>Base Earn — Retail Spend</strong></td>
+                  <td>Fare-based</td>
+                  <td>1 IBC / ₹100</td>
+                  <td>Jan 1, 2026 — Dec 31, 2026</td>
+                  <td>P1</td>
+                  <td><span style="color:#059669; font-size:11px; font-weight:600;">Additive</span></td>
+                  <td><span class="badge active">Active</span></td>
+                  <td style="display:flex; gap:4px;">
+                    <button class="btn btn-secondary btn-xs">Edit</button>
+                    <button class="btn btn-secondary btn-xs">Clone</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">RULE-002</span></td>
+                  <td><strong>Tier Bonus — Gold Members</strong></td>
+                  <td>Class-based</td>
+                  <td>+25% on RULE-001</td>
+                  <td>Jan 1, 2026 — Jun 30, 2026</td>
+                  <td>P2</td>
+                  <td><span style="color:#0284C7; font-size:11px; font-weight:600;">Sequential*</span></td>
+                  <td><span class="badge active">Active</span></td>
+                  <td style="display:flex; gap:4px;">
+                    <button class="btn btn-secondary btn-xs">Edit</button>
+                    <button class="btn btn-secondary btn-xs">Clone</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">RULE-003</span></td>
+                  <td><strong>Bonus — Premium Card Holders</strong></td>
+                  <td>Fare-based</td>
+                  <td>+50 IBC flat/txn</td>
+                  <td>Feb 1, 2026 — Mar 31, 2026</td>
+                  <td>P3</td>
+                  <td><span style="color:#059669; font-size:11px; font-weight:600;">Additive</span></td>
+                  <td><span class="badge active">Active</span></td>
+                  <td style="display:flex; gap:4px;">
+                    <button class="btn btn-secondary btn-xs">Edit</button>
+                    <button class="btn btn-secondary btn-xs">Clone</button>
+                  </td>
+                </tr>
+                <tr style="opacity:0.6;">
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">RULE-004</span></td>
+                  <td><strong>Year-End Bonus 2025</strong></td>
+                  <td>Fare-based</td>
+                  <td>2x IBCs</td>
+                  <td>Dec 1, 2025 — Dec 31, 2025</td>
+                  <td>P1</td>
+                  <td>Additive</td>
+                  <td><span class="badge draft">Expired</span></td>
+                  <td><button class="btn btn-secondary btn-xs">View</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Rule Edit Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Edit Rule — RULE-002: Tier Bonus Gold Members</div>
+              <div class="panel-subtitle">⚠️ Changes require maker-checker approval before going live</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-secondary btn-sm">Discard</button>
+              <button class="btn btn-primary btn-sm">Save & Submit for Approval</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="tabs">
+              <div class="tab-item active">Rule Config</div>
+              <div class="tab-item">Eligibility Filters</div>
+              <div class="tab-item">Stacking & Dependencies</div>
+              <div class="tab-item">Validation Rules</div>
+              <div class="tab-item">Audit History</div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="input-group">
+                <div class="input-label">Rule Name *</div>
+                <input class="input-field" value="Tier Bonus — Gold Members">
+              </div>
+              <div class="input-group">
+                <div class="input-label">Accrual Model *</div>
+                <select class="input-field">
+                  <option>Class-based</option>
+                  <option>Fare-based</option>
+                  <option>Distance (TPM)</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <div class="input-label">Effective Start Date *</div>
+                <input class="input-field" type="date" value="2026-01-01">
+              </div>
+              <div class="input-group">
+                <div class="input-label">Effective End Date *</div>
+                <input class="input-field" type="date" value="2026-06-30">
+              </div>
+              <div class="input-group">
+                <div class="input-label">Bonus Rate</div>
+                <input class="input-field" value="+25%" placeholder="e.g. +25%">
+              </div>
+              <div class="input-group">
+                <div class="input-label">Priority Order</div>
+                <input class="input-field" type="number" value="2">
+              </div>
+            </div>
+
+            <div class="notice info">
+              <span>ℹ️</span>
+              <div><strong>Sequential Dependency:</strong> This rule requires RULE-001 (Base Earn) to evaluate as SUCCESS before applying. <a href="#" style="color:inherit; text-decoration:underline;">Manage dependencies →</a></div>
+            </div>
+
+            <div class="input-group">
+              <div class="input-label">Stacking Behaviour</div>
+              <div style="display:flex; gap:8px; margin-top:4px;">
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:12.5px; padding:8px 14px; border:1.5px solid var(--indigo-light); border-radius:8px; background:#EFF6FF;">
+                  <input type="radio" name="stacking" checked> Sequential / Conditional
+                </label>
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:12.5px; padding:8px 14px; border:1px solid var(--border); border-radius:8px;">
+                  <input type="radio" name="stacking"> Additive
+                </label>
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:12.5px; padding:8px 14px; border:1px solid var(--border); border-radius:8px;">
+                  <input type="radio" name="stacking"> Best-of / Override
+                </label>
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:12.5px; padding:8px 14px; border:1px solid var(--border); border-radius:8px;">
+                  <input type="radio" name="stacking"> Exclusion
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN 5: RETRO CLAIMS ===== -->
+      <div class="screen" id="screen5">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">Home <span class="sep">›</span> Operations <span class="sep">›</span> <span class="current">Retro Claims</span></div>
+            <div class="page-title">Retro Claims Queue</div>
+            <div class="page-subtitle">12 open claims · 4 approaching SLA deadline</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary btn-sm">📥 Export</button>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);">
+          <div class="stat-card blue"><div class="stat-icon">📋</div><div class="stat-value" style="color:#1B2E6B;">12</div><div class="stat-label">Open Claims</div></div>
+          <div class="stat-card amber"><div class="stat-icon">⏱️</div><div class="stat-value" style="color:#D97706;">4</div><div class="stat-label">Approaching SLA</div></div>
+          <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-value" style="color:#059669;">94.2%</div><div class="stat-label">Approval Rate (MTD)</div></div>
+          <div class="stat-card sky"><div class="stat-icon">📅</div><div class="stat-value" style="color:#0284C7;">3.2d</div><div class="stat-label">Avg Resolution Time</div></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Claims Review Queue</div>
+            <div style="display:flex; gap:6px;">
+              <select class="input-field" style="width:130px; height:32px; font-size:11.5px;"><option>All Partners</option><option>HDFC Bank</option><option>Swiggy</option></select>
+              <select class="input-field" style="width:120px; height:32px; font-size:11.5px;"><option>All Status</option><option>Open</option><option>On Hold</option></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Claim ID</th>
+                  <th>Partner</th>
+                  <th>FFN</th>
+                  <th>Txn Date</th>
+                  <th>Amount</th>
+                  <th>IBCs Claimed</th>
+                  <th>Auto-Match</th>
+                  <th>SLA</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="claim-priority" style="background:#EF4444;"></div></td>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">CLM-2892</span></td>
+                  <td>HDFC Bank</td>
+                  <td>6E-****4521</td>
+                  <td>Jan 28, 2026</td>
+                  <td>₹8,400</td>
+                  <td>840</td>
+                  <td><span style="color:#DC2626; font-size:11px; font-weight:600;">No Match</span></td>
+                  <td><span class="sla-timer red">1d left</span></td>
+                  <td><span class="badge pending">Open</span></td>
+                  <td style="display:flex; gap:3px;">
+                    <button class="btn btn-primary btn-xs" style="background:#059669;">Approve</button>
+                    <button class="btn btn-secondary btn-xs">Reject</button>
+                    <button class="btn btn-secondary btn-xs">Hold</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><div class="claim-priority" style="background:#F59E0B;"></div></td>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">CLM-2891</span></td>
+                  <td>Axis Bank</td>
+                  <td>6E-****7834</td>
+                  <td>Jan 30, 2026</td>
+                  <td>₹12,000</td>
+                  <td>1,200</td>
+                  <td><span style="color:#D97706; font-size:11px; font-weight:600;">Partial Match</span></td>
+                  <td><span class="sla-timer amber">2d left</span></td>
+                  <td><span class="badge pending">Open</span></td>
+                  <td style="display:flex; gap:3px;">
+                    <button class="btn btn-primary btn-xs" style="background:#059669;">Approve</button>
+                    <button class="btn btn-secondary btn-xs">Partial</button>
+                    <button class="btn btn-secondary btn-xs">Reject</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><div class="claim-priority" style="background:#10B981;"></div></td>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">CLM-2888</span></td>
+                  <td>HDFC Bank</td>
+                  <td>6E-****2201</td>
+                  <td>Feb 2, 2026</td>
+                  <td>₹5,200</td>
+                  <td>520</td>
+                  <td><span style="color:#059669; font-size:11px; font-weight:600;">Matched</span></td>
+                  <td><span class="sla-timer green">6d left</span></td>
+                  <td><span class="badge pending">Open</span></td>
+                  <td style="display:flex; gap:3px;">
+                    <button class="btn btn-primary btn-xs" style="background:#059669;">Approve</button>
+                    <button class="btn btn-secondary btn-xs">Reject</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><div class="claim-priority" style="background:#EF4444;"></div></td>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">CLM-2885</span></td>
+                  <td>MakeMyTrip</td>
+                  <td>6E-****9012</td>
+                  <td>Jan 25, 2026</td>
+                  <td>₹22,000</td>
+                  <td>2,200</td>
+                  <td><span style="color:#DC2626; font-size:11px; font-weight:600;">No Match</span></td>
+                  <td><span class="sla-timer red">0d left</span></td>
+                  <td><span class="badge draft" style="background:#FEF2F2; color:#DC2626;">SLA Breach</span></td>
+                  <td style="display:flex; gap:3px;">
+                    <button class="btn btn-primary btn-xs" style="background:#DC2626;">Escalate</button>
+                    <button class="btn btn-secondary btn-xs">Review</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN 6: FILE MANAGEMENT ===== -->
+      <div class="screen" id="screen6">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">Home <span class="sep">›</span> Integration <span class="sep">›</span> <span class="current">File Management</span></div>
+            <div class="page-title">File Management</div>
+            <div class="page-subtitle">84 files received today · 79 processed · 3 failed</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary btn-sm">📤 Upload File</button>
+            <button class="btn btn-secondary btn-sm">📥 Export Log</button>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns: repeat(5,1fr);">
+          <div class="stat-card blue"><div class="stat-icon">📁</div><div class="stat-value" style="color:#1B2E6B;">84</div><div class="stat-label">Files Today</div></div>
+          <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-value" style="color:#059669;">79</div><div class="stat-label">Processed</div></div>
+          <div class="stat-card red"><div class="stat-icon">❌</div><div class="stat-value" style="color:#DC2626;">3</div><div class="stat-label">Failed</div></div>
+          <div class="stat-card amber"><div class="stat-icon">⏱️</div><div class="stat-value" style="color:#D97706;">2</div><div class="stat-label">SLA Breach</div></div>
+          <div class="stat-card sky"><div class="stat-icon">📤</div><div class="stat-value" style="color:#0284C7;">71</div><div class="stat-label">Handbacks Sent</div></div>
+        </div>
+
+        <!-- Filters -->
+        <div class="panel" style="margin-bottom:16px;">
+          <div class="panel-body" style="padding:10px 16px;">
+            <div style="display:flex; gap:10px;">
+              <input class="input-field" style="width:200px; height:32px;" placeholder="🔍 Search filename...">
+              <select class="input-field" style="width:130px; height:32px;">
+                <option>All Partners</option>
+                <option>HDFC Bank</option>
+                <option>Swiggy</option>
+                <option>Axis Bank</option>
+              </select>
+              <select class="input-field" style="width:120px; height:32px;">
+                <option>All Types</option>
+                <option>Accrual</option>
+                <option>Redemption</option>
+                <option>Billing</option>
+                <option>Retro</option>
+              </select>
+              <select class="input-field" style="width:110px; height:32px;">
+                <option>All Status</option>
+                <option>Success</option>
+                <option>Failed</option>
+                <option>Processing</option>
+              </select>
+              <select class="input-field" style="width:110px; height:32px;">
+                <option>Today</option>
+                <option>Last 7 days</option>
+                <option>Last 30 days</option>
+                <option>Custom</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">File Queue</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Filename</th>
+                  <th>Partner</th>
+                  <th>Type</th>
+                  <th>Format</th>
+                  <th>Direction</th>
+                  <th>Received</th>
+                  <th>SLA</th>
+                  <th>Records</th>
+                  <th>Success</th>
+                  <th>Failed</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="file-status-dot success"></div></td>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">HDFC_ACCRUAL_20260224_001.csv</span></td>
+                  <td>HDFC Bank</td>
+                  <td>Accrual</td>
+                  <td>CSV</td>
+                  <td>↓ Inbound</td>
+                  <td>08:12 IST</td>
+                  <td><span class="sla-timer green">✓ On time</span></td>
+                  <td>47,382</td>
+                  <td style="color:#059669; font-weight:600;">47,201</td>
+                  <td style="color:#DC2626; font-weight:600;">181</td>
+                  <td><span class="badge active">Done</span></td>
+                  <td><button class="btn btn-secondary btn-xs">Details</button></td>
+                </tr>
+                <tr>
+                  <td><div class="file-status-dot processing"></div></td>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">SWIGGY_BURN_20260224_001.txt</span></td>
+                  <td>Swiggy</td>
+                  <td>Burn</td>
+                  <td>TXT</td>
+                  <td>↓ Inbound</td>
+                  <td>09:44 IST</td>
+                  <td><span class="sla-timer green">2h 16m</span></td>
+                  <td>12,801</td>
+                  <td style="color:#059669; font-weight:600;">10,422</td>
+                  <td style="color:var(--text-muted); font-weight:600;">—</td>
+                  <td><span class="badge pending">Processing</span></td>
+                  <td><button class="btn btn-secondary btn-xs">Monitor</button></td>
+                </tr>
+                <tr>
+                  <td><div class="file-status-dot failed"></div></td>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">TAJ_ACCRUAL_20260224_002.csv</span></td>
+                  <td>Taj Hotels</td>
+                  <td>Accrual</td>
+                  <td>CSV</td>
+                  <td>↓ Inbound</td>
+                  <td>09:51 IST</td>
+                  <td><span class="sla-timer red">SLA breach</span></td>
+                  <td>3,482</td>
+                  <td style="color:#059669; font-weight:600;">0</td>
+                  <td style="color:#DC2626; font-weight:600;">3,482</td>
+                  <td><span class="badge suspended">Failed</span></td>
+                  <td style="display:flex; gap:3px;"><button class="btn btn-secondary btn-xs">Details</button><button class="btn btn-primary btn-xs" style="background:#DC2626;">Reprocess</button></td>
+                </tr>
+                <tr>
+                  <td><div class="file-status-dot success"></div></td>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">HDFC_HANDBACK_20260224_001.csv</span></td>
+                  <td>HDFC Bank</td>
+                  <td>Handback</td>
+                  <td>CSV</td>
+                  <td>↑ Outbound</td>
+                  <td>08:38 IST</td>
+                  <td><span class="sla-timer green">✓ On time</span></td>
+                  <td>47,382</td>
+                  <td style="color:#059669; font-weight:600;">47,382</td>
+                  <td>0</td>
+                  <td><span class="badge active">Sent</span></td>
+                  <td><button class="btn btn-secondary btn-xs">Download</button></td>
+                </tr>
+                <tr>
+                  <td><div class="file-status-dot success"></div></td>
+                  <td><span style="font-family:'DM Mono'; font-size:11px;">AXIS_BILLING_202601_001.xlsx</span></td>
+                  <td>Axis Bank</td>
+                  <td>Billing</td>
+                  <td>XLSX</td>
+                  <td>↑ Outbound</td>
+                  <td>Feb 1, 08:00</td>
+                  <td><span class="sla-timer green">✓ On time</span></td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td><span class="badge active">Delivered</span></td>
+                  <td><button class="btn btn-secondary btn-xs">Download</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN 7: FINANCE & BILLING ===== -->
+      <div class="screen" id="screen7">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">Home <span class="sep">›</span> <span class="current">Finance & Billing</span></div>
+            <div class="page-title">Finance, Billing & Settlement</div>
+            <div class="page-subtitle">February 2026 · Billing cycle in progress</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary btn-sm">📥 Export</button>
+            <button class="btn btn-primary btn-sm">🧾 Generate Invoice</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card green"><div class="stat-icon">💰</div><div class="stat-value" style="color:#059669;">₹48.2L</div><div class="stat-label">Revenue (MTD)</div><div class="stat-delta up">▲ 8.3% vs last month</div></div>
+          <div class="stat-card amber"><div class="stat-icon">📄</div><div class="stat-value" style="color:#D97706;">7</div><div class="stat-label">Invoices Pending</div></div>
+          <div class="stat-card red"><div class="stat-icon">⚖️</div><div class="stat-value" style="color:#DC2626;">3</div><div class="stat-label">Active Disputes</div></div>
+          <div class="stat-card blue"><div class="stat-icon">✅</div><div class="stat-value" style="color:#1B2E6B;">₹1.24Cr</div><div class="stat-label">Settled (Jan 2026)</div></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Invoice & Settlement List</div>
+              <div class="panel-subtitle">Feb 2026 billing cycle</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Invoice ID</th>
+                    <th>Partner</th>
+                    <th>Period</th>
+                    <th>IBCs Issued</th>
+                    <th>Amount (₹)</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span style="font-family:'DM Mono'; font-size:11px;">INV-2026-041</span></td>
+                    <td>HDFC Bank</td>
+                    <td>Jan 2026</td>
+                    <td>2,184,302</td>
+                    <td style="font-weight:700;">₹17,91,127</td>
+                    <td><span class="badge active">Paid</span></td>
+                    <td><button class="btn btn-secondary btn-xs">PDF</button></td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-family:'DM Mono'; font-size:11px;">INV-2026-042</span></td>
+                    <td>Axis Bank</td>
+                    <td>Jan 2026</td>
+                    <td>1,402,100</td>
+                    <td style="font-weight:700;">₹11,91,785</td>
+                    <td><span class="badge pending">Pending Payment</span></td>
+                    <td style="display:flex; gap:3px;"><button class="btn btn-secondary btn-xs">PDF</button><button class="btn btn-primary btn-xs" style="background:#059669;">Mark Paid</button></td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-family:'DM Mono'; font-size:11px;">INV-2026-043</span></td>
+                    <td>MakeMyTrip</td>
+                    <td>Jan 2026</td>
+                    <td>641,820</td>
+                    <td style="font-weight:700;">₹4,62,110</td>
+                    <td><span class="badge suspended">Disputed</span></td>
+                    <td style="display:flex; gap:3px;"><button class="btn btn-secondary btn-xs">PDF</button><button class="btn btn-secondary btn-xs">Dispute</button></td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-family:'DM Mono'; font-size:11px;">INV-2026-044</span></td>
+                    <td>Taj Hotels</td>
+                    <td>Feb 2026</td>
+                    <td>—</td>
+                    <td style="font-weight:700;">—</td>
+                    <td><span class="badge draft">Draft</span></td>
+                    <td><button class="btn btn-secondary btn-xs">Edit</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Rate Configuration — HDFC Bank</div>
+              <div class="panel-subtitle">Current billing setup</div>
+            </div>
+            <div class="panel-body">
+              <div style="background:var(--surface2); border-radius:10px; padding:14px; margin-bottom:14px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                  <div>
+                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px;">Rate Type</div>
+                    <div style="font-weight:700;">Slab-based</div>
+                  </div>
+                  <div>
+                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px;">Billing Cycle</div>
+                    <div style="font-weight:700;">Monthly (1st)</div>
+                  </div>
+                  <div>
+                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px;">Currency</div>
+                    <div style="font-weight:700;">INR</div>
+                  </div>
+                  <div>
+                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px;">Tax (GST)</div>
+                    <div style="font-weight:700;">18% applicable</div>
+                  </div>
+                </div>
+              </div>
+              <div style="font-size:11.5px; font-weight:700; margin-bottom:8px; color:var(--text-secondary);">SLAB RATES</div>
+              <table style="width:100%;">
+                <thead><tr><th>Volume Bracket (IBCs)</th><th>Rate per IBC</th></tr></thead>
+                <tbody>
+                  <tr><td>0 – 500,000</td><td style="font-weight:700; color:#059669;">₹0.85</td></tr>
+                  <tr><td>500,001 – 1,500,000</td><td style="font-weight:700; color:#059669;">₹0.82</td></tr>
+                  <tr><td>1,500,001 – 3,000,000</td><td style="font-weight:700; color:#059669;">₹0.80</td></tr>
+                  <tr><td>3,000,001+</td><td style="font-weight:700; color:#059669;">₹0.77</td></tr>
+                </tbody>
+              </table>
+              <div style="margin-top:14px;">
+                <button class="btn btn-outline btn-sm" style="width:100%;">Edit Rate Configuration →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- END CONTENT -->
+  </div>
+</div>
+
+<!-- ===== SCREEN SWITCHER ===== -->
+<div class="screen-switcher">
+  <button class="sw-btn active" onclick="showScreen(1, 'SCREEN 1 — OPERATOR DASHBOARD', this)">1 Dashboard</button>
+  <button class="sw-btn" onclick="showScreen(2, 'SCREEN 2 — PARTNER CRM', this)">2 Partner CRM</button>
+  <button class="sw-btn" onclick="showScreen(3, 'SCREEN 3 — ONBOARDING WIZARD', this)">3 Onboarding</button>
+  <button class="sw-btn" onclick="showScreen(4, 'SCREEN 4 — EARN RULES ENGINE', this)">4 Earn Rules</button>
+  <button class="sw-btn" onclick="showScreen(5, 'SCREEN 5 — RETRO CLAIMS', this)">5 Retro Claims</button>
+  <button class="sw-btn" onclick="showScreen(6, 'SCREEN 6 — FILE MANAGEMENT', this)">6 Files</button>
+  <button class="sw-btn" onclick="showScreen(7, 'SCREEN 7 — FINANCE & BILLING', this)">7 Finance</button>
+</div>
+
+<script>
+function showScreen(n, label, el) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('visible'));
+  document.getElementById('screen' + n).classList.add('visible');
+  document.getElementById('screenLabel').textContent = label;
+  document.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelector('.content').scrollTop = 0;
+}
+
+// Nav items click simulation
+document.querySelectorAll('.nav-item').forEach((item, i) => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
